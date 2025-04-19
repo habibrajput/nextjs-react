@@ -1,11 +1,7 @@
 {
-  "name": "next-shadcn-dashboard-starter",
+  "name": "next-react",
   "version": "1.0.0",
   "private": true,
-  "author": {
-    "name": "Kiran",
-    "url": "https://github.com/Kiranism"
-  },
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
@@ -86,7 +82,7 @@
     "recharts": "^2.15.1",
     "sharp": "^0.33.5",
     "sonner": "^1.7.1",
-    "sort-by": "^1.2.0",
+    "sort-by": "^0.0.2",
     "tailwind-merge": "^3.0.2",
     "tailwindcss": "^4.0.0",
     "tailwindcss-animate": "^1.0.7",

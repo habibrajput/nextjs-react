@@ -14,7 +14,7 @@ export const columns: ColumnDef<Product>[] = [
     header: 'IMAGE',
     cell: ({ row }) => {
       return (
-        <div className='relative aspect-square'>
+        <div className='relative aspect-square w-6 h-6'>
           <Image
             src={row.getValue('photo_url')}
             alt={row.getValue('name')}

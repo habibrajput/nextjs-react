@@ -63,7 +63,7 @@ export function DataTable<TData>({
                         <TableCell
                           key={cell.id}
                           style={{
-                            ...getCommonPinningStyles({ column: cell.column })
+                            ...getCommonPinningStyles({ column: cell.column }),
                           }}
                         >
                           {flexRender(

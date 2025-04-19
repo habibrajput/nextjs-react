@@ -1,5 +1,4 @@
 'use client';
-import { Button } from '@/components/ui/button';
 import { LoadingButton } from '@/components/ui/loading-button';
 import {
   Form,
@@ -17,6 +16,7 @@ import { useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import * as z from 'zod';
+import { useState } from 'react';
 import GithubSignInButton from './github-auth-button';
 
 const formSchema = z.object({
@@ -29,23 +29,35 @@ type UserFormValue = z.infer<typeof formSchema>;
 export default function UserAuthForm() {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get('callbackUrl');
+  const [isSigningIn, setIsSigningIn] = useState(false);
   const [loading, startTransition] = useTransition();
   const defaultValues = {
-    email: '',
-    password: ''
+    email: 'habib@email.com',
+    password: 'habib@email.com'
   };
   const form = useForm<UserFormValue>({
     resolver: zodResolver(formSchema),
     defaultValues
   });
 
-  const onSubmit = async (data: UserFormValue) => {
+  const onSubmit = (data: UserFormValue) => {
     startTransition(() => {
-      signIn('credentials', {
-        email: data.email,
-        callbackUrl: callbackUrl ?? '/dashboard'
-      });
-      toast.success('Signed In Successfully!');
+      setIsSigningIn(true); 
+      setTimeout(() => {
+        signIn('credentials', {
+          email: data.email,
+          callbackUrl: callbackUrl ?? '/dashboard'
+        })
+          .then(() => {
+            toast.success('Signed In Successfully!');
+          })
+          .catch(() => {
+            toast.error('Sign In Failed!');
+          })
+          .finally(() => {
+            setIsSigningIn(false);
+          });
+      }, 3000);
     });
   };
 
@@ -94,16 +106,14 @@ export default function UserAuthForm() {
             )}
           />
 
-          <Button
-            disabled={loading}
+          <LoadingButton
+            disabled={isSigningIn}
             className='mt-2 ml-auto w-full'
             type='submit'
+            isLoading={isSigningIn}
           >
-            Continue With Email
-          </Button>
-          <LoadingButton
-            isLoading={true}
-          >Save</LoadingButton>
+            {isSigningIn ? 'Sign In...': 'Sign In'}
+          </LoadingButton>
         </form>
       </Form>
       <div className='relative'>

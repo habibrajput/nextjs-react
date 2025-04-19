@@ -10,16 +10,40 @@ export default function GithubSignInButton() {
   const callbackUrl = searchParams.get('callbackUrl');
 
   return (
-    <Button
-      className='w-full'
-      variant='outline'
-      type='button'
-      onClick={() =>
-        signIn('github', { callbackUrl: callbackUrl ?? '/dashboard' })
-      }
-    >
-      <Icons.github className='mr-2 h-4 w-4' />
-      Continue with Github
-    </Button>
+    <div className='flex items-center justify-between space-y-2'>
+        <Button
+          className='w-fit'
+          variant='outline'
+          type='button'
+          onClick={() =>
+            signIn('github', { callbackUrl: callbackUrl ?? '/dashboard' })
+          }
+        >
+          <Icons.github className='h-4 w-4' />
+          Github
+        </Button>
+        <Button
+          className='w-fit'
+          variant='outline'
+          type='button'
+          onClick={() =>
+            signIn('github', { callbackUrl: callbackUrl ?? '/dashboard' })
+          }
+        >
+          <Icons.github className='h-4 w-4' />
+          Google
+        </Button>
+        <Button
+          className='w-fit'
+          variant='outline'
+          type='button'
+          onClick={() =>
+            signIn('github', { callbackUrl: callbackUrl ?? '/dashboard' })
+          }
+        >
+          <Icons.github className='h-4 w-4' />
+          Meta
+        </Button>
+      </div>
   );
 }

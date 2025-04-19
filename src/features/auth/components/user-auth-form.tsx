@@ -1,5 +1,6 @@
 'use client';
 import { Button } from '@/components/ui/button';
+import { LoadingButton } from '@/components/ui/loading-button';
 import {
   Form,
   FormControl,
@@ -19,7 +20,8 @@ import * as z from 'zod';
 import GithubSignInButton from './github-auth-button';
 
 const formSchema = z.object({
-  email: z.string().email({ message: 'Enter a valid email address' })
+  email: z.string().email({ message: 'Enter a valid email address' }),
+  password: z.string().min(5, { message: "Must be 5 or more characters long" })
 });
 
 type UserFormValue = z.infer<typeof formSchema>;
@@ -29,7 +31,8 @@ export default function UserAuthForm() {
   const callbackUrl = searchParams.get('callbackUrl');
   const [loading, startTransition] = useTransition();
   const defaultValues = {
-    email: 'demo@gmail.com'
+    email: '',
+    password: ''
   };
   const form = useForm<UserFormValue>({
     resolver: zodResolver(formSchema),
@@ -72,6 +75,25 @@ export default function UserAuthForm() {
             )}
           />
 
+          <FormField
+            control={form.control}
+            name='password'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <Input
+                    type='password'
+                    placeholder='Enter your pass...'
+                    disabled={loading}
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
           <Button
             disabled={loading}
             className='mt-2 ml-auto w-full'
@@ -79,6 +101,9 @@ export default function UserAuthForm() {
           >
             Continue With Email
           </Button>
+          <LoadingButton
+            isLoading={true}
+          >Save</LoadingButton>
         </form>
       </Form>
       <div className='relative'>

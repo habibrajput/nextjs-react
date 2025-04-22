@@ -9,7 +9,7 @@ import { Icons } from '@/components/icons';
 
 type DefaultDrawerProps = {
     open: boolean; 
-    title: string; 
+    title: any;
     description?: string;
     width?: string | number;
     children?: React.ReactNode

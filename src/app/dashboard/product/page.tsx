@@ -8,7 +8,7 @@ import { Suspense } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Card,CardHeader,CardTitle,CardDescription,CardAction } from '@/components/ui/card';
 import { IconTrendingDown, IconTrendingUp } from '@tabler/icons-react';
-import  AddProductWrapper from '@/features/products/components/trigger-add-product';
+import  AddProductWrapper from '@/features/products/components/add-product/add-product-drawer';
 export const metadata = {
   title: 'Dashboard: Products'
 };
@@ -33,7 +33,7 @@ export default async function Page(props: pageProps) {
             title='Customers'
             description='Manage customers (Server side table functionalities.)'
           />
-          <AddProductWrapper />
+          <AddProductWrapper/>
         </div>
 
         <div className='*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs md:grid-cols-2 lg:grid-cols-4'>

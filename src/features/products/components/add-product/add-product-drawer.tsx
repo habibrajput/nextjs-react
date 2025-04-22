@@ -26,6 +26,13 @@ const modeMap: Record<Mode, { title: string; description: string }> = {
   },
 };
 
+type OptionCardProps = {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+  onClick: () => void;
+}
+
 export default function AddProductWrapper() {
   const [isOpen, setIsOpen] = useState(false);
   const [width] = useState(500);

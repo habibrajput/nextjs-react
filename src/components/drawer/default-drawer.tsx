@@ -12,8 +12,10 @@ type DefaultDrawerProps = {
     title: string;
     description?: string;
     width?: string | number;
+    isBack?: boolean;
     children?: React.ReactNode
-    onClose: () => void; 
+    onBack?: () => void; 
+    onClose: () => void;
 };
 
 export default function DefaultDrawer({
@@ -22,6 +24,8 @@ export default function DefaultDrawer({
     children,
     description,
     width = '500px',
+    isBack,
+    onBack,
     onClose,
 }: DefaultDrawerProps) {
     return (
@@ -36,25 +40,41 @@ export default function DefaultDrawer({
                     maxWidth: typeof width === 'number' ? `${width}px` : width,
                     width: '100%'
                 }}
+                onEscapeKeyDown={(e) => e.preventDefault()}
+                onPointerDown={(e) => e.preventDefault()}
+                onInteractOutside={(e) => e.preventDefault()}
             >
-                <DrawerHeader className='p-0' >
-                    <DrawerTitle className='bg-gray-100 p-3 flex justify-between items-center'>
+                <DrawerHeader className='p-0'>
+                    <div className='px-4 pt-3 flex justify-between items-center'>
+                        <div>
+                            {
+                                isBack && (
+                                    <Icons.arrowLeft
+                                        onClick={onBack}
+                                        className="cursor-pointer"
+                                        size={18}
+                                    />
+                                )
+                            }
+                        </div>
+                        <Icons.close
+                            onClick={onClose}
+                            className="cursor-pointer"
+                            size={18}
+                        />
+                    </div>
+                    <DrawerTitle className='px-4 flex justify-start'>
                         <div className='grid'>
-                            {title} 
+                            <h1 className='text-lg font-bold text-foreground'>{title} </h1>
                             {
                             description ? 
                                 <DrawerDescription className='text-xm font-medium'>{description}</DrawerDescription> :
                                 <DrawerDescription className='text-xm font-medium'></DrawerDescription>
                             }
                         </div>
-                        <Icons.close
-                            onClick={onClose}
-                          className="cursor-pointer"
-                          size={15}
-                        />
                    </DrawerTitle>
                 </DrawerHeader>
-                <div className='p-3'>
+                <div className='px-4 py-3'>
                     {children}
                 </div>
             </DrawerContent>

@@ -32,8 +32,7 @@ import {
   IconLayoutKanban,
   IconBrandGithub
 } from '@tabler/icons-react';
-import {LoaderCircle} from 'lucide-react'
-
+import { LoaderCircle, ArrowLeft, FileUp, Plus } from 'lucide-react';
 export type Icon = React.ComponentType<IconProps>;
 
 export const Icons = {
@@ -68,5 +67,9 @@ export const Icons = {
   github: IconBrandGithub,
   twitter: IconBrandTwitter,
   check: IconCheck,
-  loader: LoaderCircle
+  loader: LoaderCircle,
+  arrowLeft: ArrowLeft,
+  iconPlus: IconPlus,
+  fileUp: FileUp,
+  plus: Plus,
 };

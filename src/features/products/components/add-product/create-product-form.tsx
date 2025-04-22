@@ -15,6 +15,9 @@ const formSchema = z.object({
   name: z.string().min(2, {
     message: "Product name must be at least 2 characters.",
   }),
+  email: z.string().min(2, {
+    message: "Product name must be at least 2 characters.",
+  }),
   description: z.string().min(10, {
     message: "Description must be at least 10 characters.",
   }),
@@ -42,10 +45,8 @@ export function CreateProductForm({ onCancel, onSuccess }: CreateProductFormProp
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
+      email: "",
       description: "",
-      price: 0,
-      stock: 0,
-      sku: "",
     },
   })
 
@@ -68,9 +69,9 @@ export function CreateProductForm({ onCancel, onSuccess }: CreateProductFormProp
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Product Name</FormLabel>
+              <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input placeholder="Enter product name" {...field} />
+                <Input placeholder="Enter contact name" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -78,6 +79,34 @@ export function CreateProductForm({ onCancel, onSuccess }: CreateProductFormProp
         />
 
         <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input placeholder="Enter email" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Phone No</FormLabel>
+              <FormControl>
+                <Input placeholder="Enter phone number" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {/* <FormField
           control={form.control}
           name="description"
           render={({ field }) => (
@@ -89,9 +118,9 @@ export function CreateProductForm({ onCancel, onSuccess }: CreateProductFormProp
               <FormMessage />
             </FormItem>
           )}
-        />
+        /> */}
 
-        <FormField
+        {/* <FormField
           control={form.control}
           name="category"
           render={({ field }) => (
@@ -114,37 +143,7 @@ export function CreateProductForm({ onCancel, onSuccess }: CreateProductFormProp
               <FormMessage />
             </FormItem>
           )}
-        />
-
-        <div className="grid grid-cols-2 gap-4">
-          <FormField
-            control={form.control}
-            name="price"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Price ($)</FormLabel>
-                <FormControl>
-                  <Input type="number" step="0.01" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="stock"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Stock</FormLabel>
-                <FormControl>
-                  <Input type="number" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
+        /> */}
 
         <FormField
           control={form.control}

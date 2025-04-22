@@ -21,7 +21,7 @@ export default function DefaultDrawer({
     title,
     children,
     description,
-    width,
+    width = '500px',
     onClose,
 }: DefaultDrawerProps) {
     return (

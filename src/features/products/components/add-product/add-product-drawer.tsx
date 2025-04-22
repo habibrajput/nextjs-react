@@ -5,101 +5,80 @@ import { Button } from '@/components/ui/button';
 import { IconPlus } from '@tabler/icons-react';
 import DefaultDrawer from '@/components/drawer/default-drawer';
 import { ArrowLeft, FileUp, Plus } from 'lucide-react';
-import { SheetDescription, SheetTitle } from '@/components/ui/sheet';
 import { CreateProductForm } from '@/features/products/components/add-product/create-product-form';
 import { UploadProductsForm } from '@/features/products/components/add-product/upload-products-form';
 
 type Mode = 'select' | 'create' | 'upload';
-type ModeTitle = 'Add Product' | 'Create Single Product' | 'Upload Products';
 
-// type AddProductDrawerProps = {
-//   open: boolean;
-//   onOpenChange: (open: boolean) => void;
-// };
-
-type OptionCardProps = {
-  icon: React.ReactNode;
-  title: string;
-  description: string;
-  onClick: () => void;
-}
+// Extracted static mode map for titles and descriptions
+const modeMap: Record<Mode, { title: string; description: string }> = {
+  select: {
+    title: 'Add Product',
+    description: 'Choose how you want to add products to your inventory.',
+  },
+  create: {
+    title: 'Create Single Product',
+    description: 'Fill in the details to create a new product.',
+  },
+  upload: {
+    title: 'Upload Products',
+    description: 'Upload a CSV or Excel file with your product data.',
+  },
+};
 
 export default function AddProductWrapper() {
   const [isOpen, setIsOpen] = useState(false);
-  const [width, setWidth] = useState(500);
+  const [width] = useState(500);
   const [mode, setMode] = useState<Mode>('select');
 
-  const handleOpen = () => {
-    setIsOpen(true)
+  // Renamed functions for clarity
+  const openDrawer = () => setIsOpen(true);
+  const resetMode = () => setMode('select');
+  const closeDrawer = () => {
+    setIsOpen(false);
+    setTimeout(resetMode, 300); // Reset mode with a delay after drawer closes
   };
 
-  const handleBack = () => {
-    setMode('select');
-  };
-  const handleClose = () => {
-    setIsOpen(false)
-    // Reset to selection mode after drawer closes
-    setTimeout(() => setMode('select'), 300);
-  };
+  // Extract reusable JSX for titles and descriptions
+  const renderSheetTitle = () => { modeMap[mode].title};
+  const renderSheetDescription = () => {modeMap[mode].description};
 
-  const title = (mode: Mode): string => {
-    const modeMap: Record<Mode, string> = {
-      select: 'Add Product',
-      create: 'Create Single Product',
-      upload: 'Upload Products',
-    };
-
-    return modeMap[mode];
-  };
-
-
+  // Return JSX with improvements
   return (
     <>
-      <Button onClick={handleOpen}>
+      <Button onClick={openDrawer}>
         <IconPlus className='mr-2 h-4 w-4' /> Add New
       </Button>
-
       <DefaultDrawer
         open={isOpen}
         width={width}
-        title={title}
-        onClose={handleClose}
+        title={modeMap[mode].title}
+        description={modeMap[mode].description}
+        onClose={closeDrawer}
       >
         {mode !== 'select' && (
           <Button
             variant='ghost'
             size='sm'
             className='absolute top-4 left-4 h-8 w-8 rounded-full p-0'
-            onClick={handleBack}
+            onClick={resetMode}
           >
             <ArrowLeft className='h-4 w-4' />
             <span className='sr-only'>Back</span>
           </Button>
         )}
-        <SheetTitle>
-          {mode === 'select' && 'Add Product'}
-          {mode === 'create' && 'Create Single Product'}
-          {mode === 'upload' && 'Upload Products'}
-        </SheetTitle>
-        <SheetDescription>
-          {mode === 'select' &&
-            'Choose how you want to add products to your inventory.'}
-          {mode === 'create' && 'Fill in the details to create a new product.'}
-          {mode === 'upload' &&
-            'Upload a CSV or Excel file with your product data.'}
-        </SheetDescription>
-
         <div className='mt-8'>
           {mode === 'select' && (
             <div className='space-y-6'>
               <div className='grid grid-cols-1 gap-4'>
+                {modeMap[mode].title}
+                {modeMap[mode].description}
                 <OptionCard
                   icon={<Plus className='h-5 w-5' />}
                   title='Create Single Product'
                   description='Add a new product by filling out a form with all the details.'
                   onClick={() => setMode('create')}
                 />
-
                 <OptionCard
                   icon={<FileUp className='h-5 w-5' />}
                   title='Upload Products'
@@ -107,22 +86,13 @@ export default function AddProductWrapper() {
                   onClick={() => setMode('upload')}
                 />
               </div>
-
-              {/*<div className="text-xs text-center text-muted-foreground mt-8">*/}
-              {/*  Need help?{" "}*/}
-              {/*  <a href="#" className="text-primary underline underline-offset-4">*/}
-              {/*    View our documentation*/}
-              {/*  </a>*/}
-              {/*</div>*/}
             </div>
           )}
-
           {mode === 'create' && (
-            <CreateProductForm onCancel={handleBack} onSuccess={handleClose} />
+            <CreateProductForm onCancel={resetMode} onSuccess={closeDrawer} />
           )}
-
           {mode === 'upload' && (
-            <UploadProductsForm onCancel={handleBack} onSuccess={handleClose} />
+            <UploadProductsForm onCancel={resetMode} onSuccess={closeDrawer} />
           )}
         </div>
       </DefaultDrawer>

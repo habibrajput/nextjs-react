@@ -1,38 +1,41 @@
 import {
   IconAlertTriangle,
   IconArrowRight,
+  IconBrandGithub,
+  IconBrandTwitter,
   IconCheck,
   IconChevronLeft,
   IconChevronRight,
   IconCommand,
   IconCreditCard,
+  IconDeviceLaptop,
+  IconDotsVertical,
   IconFile,
   IconFileText,
   IconHelpCircle,
-  IconPhoto,
-  IconDeviceLaptop,
   IconLayoutDashboard,
+  IconLayoutKanban,
   IconLoader2,
   IconLogin,
-  IconProps,
-  IconShoppingBag,
   IconMoon,
-  IconDotsVertical,
+  IconPhoto,
   IconPizza,
   IconPlus,
+  IconProps,
   IconSettings,
+  IconShoppingBag,
   IconSun,
   IconTrash,
-  IconBrandTwitter,
+  IconTrendingDown,
+  IconTrendingUp,
   IconUser,
   IconUserCircle,
   IconUserEdit,
   IconUserX,
-  IconX,
-  IconLayoutKanban,
-  IconBrandGithub
+  IconX
 } from '@tabler/icons-react';
-import { LoaderCircle, ArrowLeft, FileUp, Plus } from 'lucide-react';
+import { ArrowLeft, FileUp, LoaderCircle, Plus } from 'lucide-react';
+
 export type Icon = React.ComponentType<IconProps>;
 
 export const Icons = {
@@ -72,4 +75,6 @@ export const Icons = {
   iconPlus: IconPlus,
   fileUp: FileUp,
   plus: Plus,
+  iconTrendingDown: IconTrendingDown,
+  iconTrendingUp: IconTrendingUp
 };

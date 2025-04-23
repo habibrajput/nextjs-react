@@ -5,40 +5,12 @@ import ProductListingPage from '@/features/contacts/components/product-listing';
 import { searchParamsCache, serialize } from '@/lib/searchparams';
 import { SearchParams } from 'nuqs/server';
 import { Suspense } from 'react';
-import { OverviewCards } from '@/components/overview-cards';
 import AddContactWrapper from '@/features/contacts/components/add-contact/add-contact-drawer';
-import { Icons } from '@/components/icons';
+import { ContactOverviewCards }  from '@/features/contacts/components/contact-overview/overview';
 
 export const metadata = {
   title: 'Dashboard: Contacts'
 };
-
-const infoCards: any = [
-  {
-    title: 'Total Customers',
-    description: 'Number of customers in the system',
-    icon: Icons.iconTrendingUp,
-    value: '1,250',
-  },
-  {
-    title: 'New Customers',
-    description: 'Customers added this month',
-    icon: Icons.iconTrendingDown,
-    value: '1,234',
-  },
-  {
-    title: 'Active Accounts',
-    description: 'Currently active accounts',
-    icon: Icons.iconTrendingUp,
-    value: '45,678',
-  },
-  {
-    title: 'Growth Rate',
-    description: 'Monthly growth rate',
-    icon: Icons.iconTrendingUp,
-    value: '4.5%',
-  },
-];
 
 type pageProps = {
   searchParams: Promise<SearchParams>;
@@ -62,11 +34,11 @@ export default async function Page(props: pageProps) {
           />
           <AddContactWrapper />
         </div>
-        <OverviewCards infoCards={infoCards} />
+        <ContactOverviewCards />
         <Suspense
           key={key}
           fallback={
-            <DataTableSkeleton columnCount={5} rowCount={8} filterCount={2} />
+            <DataTableSkeleton columnCount={5} rowCount={10} filterCount={2} />
           }
         >
           <ProductListingPage />

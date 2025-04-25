@@ -5,17 +5,17 @@ import { Button } from '@/components/ui/button';
 import { Icons } from '@/components/icons';
 import DefaultDrawer from '@/components/drawer/default-drawer';
 import { CreateContactForm } from '@/features/contacts/components/add-contact/create-contact-form';
-import { UploadContactsForm } from '@/features/contacts/components/add-contact/upload-contact-form';
+import MultiStepForm from '@/features/contacts/components/add-contact/multistep-form';
 import { Mode, modeMap, isMode } from '@/features/contacts/utils/utils';
 import { OptionCard } from './option-card';
 
 export default function AddContactWrapper() {
-  
+
   const [isOpen, setIsOpen] = useState(false);
-  const [width] = useState(500);
+  const [width] = useState(600);
   const [mode, setMode] = useState<Mode>('select');
   const { title, description } = modeMap[mode];
-  const isCreate = isMode(mode,'create');
+  const isCreate = isMode(mode, 'create');
   const isUpload = isMode(mode, 'upload');
   const isSelect = isMode(mode, 'select');
 
@@ -62,15 +62,15 @@ export default function AddContactWrapper() {
 
           {isCreate && (
             <CreateContactForm
-              onCancel={resetMode} 
-              onSuccess={closeDrawer} 
-             />
+              onCancel={resetMode}
+              onSuccess={closeDrawer}
+            />
           )}
 
           {isUpload && (
-            <UploadContactsForm
-              onCancel={resetMode} 
-              onSuccess={closeDrawer} 
+            <MultiStepForm
+              onCancel={resetMode}
+              onSuccess={closeDrawer}
             />
           )}
         </div>

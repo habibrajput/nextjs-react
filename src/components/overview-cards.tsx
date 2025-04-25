@@ -50,9 +50,9 @@ export function InfoCard({ title, description, icon: Icon, value }: InfoCard) {
 export function OverviewCardsLoading() {
   return (
     <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs md:grid-cols-2 lg:grid-cols-4">
-      {[...Array(4)].map((i) => {
+      {[...Array(4)].map((i,w) => {
         return (
-          <div key={i} className="space-y-3 border-1 p-3 rounded-xl">
+          <div key={w} className="space-y-3 border-1 p-3 rounded-xl">
             <Skeleton className="h-[16.5px] w-[280px]" />
             <Skeleton className="h-[16.5px] w-[250px]" />
             <Skeleton className="h-[16.5px] w-[200px]" />

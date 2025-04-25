@@ -34,7 +34,16 @@ import {
   IconUserX,
   IconX
 } from '@tabler/icons-react';
-import { ArrowLeft, FileUp, LoaderCircle, Plus } from 'lucide-react';
+import { 
+  ArrowLeft, 
+  FileUp, 
+  LoaderCircle,
+  Plus ,
+  CloudUpload,
+  Contact,
+  LocateFixed,
+  Group
+} from 'lucide-react';
 
 export type Icon = React.ComponentType<IconProps>;
 
@@ -76,5 +85,9 @@ export const Icons = {
   fileUp: FileUp,
   plus: Plus,
   iconTrendingDown: IconTrendingDown,
-  iconTrendingUp: IconTrendingUp
+  iconTrendingUp: IconTrendingUp,
+  cloudUpload: CloudUpload,
+  contact: Contact,
+  locateFixed: LocateFixed,
+  group: Group
 };

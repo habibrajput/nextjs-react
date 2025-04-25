@@ -56,7 +56,7 @@ export function UploadContactsForm({ onCancel, onSuccess }: UploadProductsFormPr
     setTimeout(() => {
       console.log("Uploading file:", file.name)
       setIsUploading(false)
-      onSuccess()
+      // onSuccess()
     }, 2000)
   }
 

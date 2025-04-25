@@ -12,7 +12,7 @@ import { OptionCard } from './option-card';
 export default function AddContactWrapper() {
 
   const [isOpen, setIsOpen] = useState(false);
-  const [width] = useState(600);
+  const [width] = useState(1000);
   const [mode, setMode] = useState<Mode>('select');
   const { title, description } = modeMap[mode];
   const isCreate = isMode(mode, 'create');

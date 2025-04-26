@@ -118,7 +118,7 @@ export default function StepperDemo({ onCancel, onSuccess }: FormProps) {
     return (
         <div className="container max-w-3xl py-5">
             <div className="flex gap-10">
-                <div className="w-1/3 bg-primary/5 rounded-xl py-5 px-3">
+                <div className="w-1/3 bg-muted rounded-xl py-5 px-3">
                     <Stepper
                         activeStep={activeStep}
                         orientation="vertical"

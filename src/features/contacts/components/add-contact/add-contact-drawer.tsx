@@ -6,13 +6,12 @@ import { Icons } from '@/components/icons';
 import DefaultDrawer from '@/components/drawer/default-drawer';
 import { CreateContactForm } from '@/features/contacts/components/add-contact/create-contact-form';
 import MultiStepForm from '@/features/contacts/components/add-contact/multistep-form';
-import { Mode, modeMap, isMode } from '@/features/contacts/utils/utils';
+import { isMode, Mode, modeMap } from '@/features/contacts/utils/utils';
 import { OptionCard } from './option-card';
 
 export default function AddContactWrapper() {
-
   const [isOpen, setIsOpen] = useState(false);
-  const [width] = useState(600);
+  const [width,setWidth] = useState(600);
   const [mode, setMode] = useState<Mode>('select');
   const { title, description } = modeMap[mode];
   const isCreate = isMode(mode, 'create');
@@ -24,6 +23,14 @@ export default function AddContactWrapper() {
   const closeDrawer = () => {
     setIsOpen(false);
     setTimeout(resetMode, 300);
+  };
+  const handleSetMode = (mode: Mode) => {
+    if(mode === 'upload'){
+      setWidth(1000)
+    }else{
+      setWidth(600)
+    }
+    setMode(mode);
   };
 
   return (
@@ -48,30 +55,24 @@ export default function AddContactWrapper() {
                   icon={<Icons.plus className='h-5 w-5' />}
                   title={modeMap['create'].title}
                   description={modeMap['create'].description}
-                  onClick={() => setMode('create')}
+                  onClick={() => handleSetMode('create')}
                 />
                 <OptionCard
                   icon={<Icons.fileUp className='h-5 w-5' />}
                   title={modeMap['upload'].title}
                   description={modeMap['upload'].description}
-                  onClick={() => setMode('upload')}
+                  onClick={() => handleSetMode('upload')}
                 />
               </div>
             </div>
           )}
 
           {isCreate && (
-            <CreateContactForm
-              onCancel={resetMode}
-              onSuccess={closeDrawer}
-            />
+            <CreateContactForm onCancel={resetMode} onSuccess={closeDrawer} />
           )}
 
           {isUpload && (
-            <MultiStepForm
-              onCancel={resetMode}
-              onSuccess={closeDrawer}
-            />
+            <MultiStepForm onCancel={resetMode} onSuccess={closeDrawer} />
           )}
         </div>
       </DefaultDrawer>

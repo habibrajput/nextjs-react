@@ -8,8 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Stepper, Step, StepIndicator, StepContent, StepTitle, StepDescription, StepperFooter } from "@/components/ui/stepper"
-import { Check, CreditCard, Home, Icon, User } from "lucide-react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Check, CreditCard, Home, User } from "lucide-react";
 import { Icons } from "@/components/icons"
 import { UploadContactsForm } from "@/features/contacts/components/add-contact/upload-contact-form"
 
@@ -119,7 +118,7 @@ export default function StepperDemo({ onCancel, onSuccess }: FormProps) {
     return (
         <div className="container max-w-3xl py-5">
             <div className="flex gap-10">
-                <div className="w-1/3">
+                <div className="w-1/3 bg-primary/5 rounded-xl py-5 px-3">
                     <Stepper
                         activeStep={activeStep}
                         orientation="vertical"
@@ -128,7 +127,7 @@ export default function StepperDemo({ onCancel, onSuccess }: FormProps) {
                             <Step key={index} index={index} >
                                 <StepIndicator index={index} icon={step.icon} total={steps.length} />
                                 <StepContent>
-                                    <StepTitle>{step.title} <span className="text-sm text-muted-foreground underline font-semibold pointer-cursor">Edit</span></StepTitle>
+                                    <StepTitle>{step.title} <span className="text-sm text-muted-foreground underline font-semibold cursor-pointer">Edit</span></StepTitle>
                                     <StepDescription>{step.description}</StepDescription>
                                 </StepContent>
                             </Step>

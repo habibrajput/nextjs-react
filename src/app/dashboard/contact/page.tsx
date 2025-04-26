@@ -1,12 +1,14 @@
-import PageContainer from '@/components/layout/page-container';
+import { Suspense } from 'react';
+import { SearchParams } from 'nuqs/server';
 import { Heading } from '@/components/ui/heading';
+import PageContainer from '@/components/layout/page-container';
+import { searchParamsCache, serialize } from '@/lib/searchparams';
 import { DataTableSkeleton } from '@/components/ui/table/data-table-skeleton';
 import ProductListingPage from '@/features/contacts/components/product-listing';
-import { searchParamsCache, serialize } from '@/lib/searchparams';
-import { SearchParams } from 'nuqs/server';
-import { Suspense } from 'react';
 import AddContactWrapper from '@/features/contacts/components/add-contact/add-contact-drawer';
-import { ContactOverviewCards }  from '@/features/contacts/components/contact-overview/overview';
+import { ContactOverviewCards } from '@/features/contacts/components/contact-overview/overview';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import {CircleUserRound, LayoutPanelTop} from 'lucide-react'
 
 export const metadata = {
   title: 'Dashboard: Contacts'
@@ -34,7 +36,27 @@ export default async function Page(props: pageProps) {
           />
           <AddContactWrapper />
         </div>
+
+        <Tabs defaultValue="contacts" className="w-full">
+          <TabsList className="h-10 w-fill">
+            <TabsTrigger value="contacts">
+              <CircleUserRound/>
+              Contacts
+            </TabsTrigger>
+            <TabsTrigger value="segments">
+              <LayoutPanelTop/>
+              Segments
+            </TabsTrigger>
+          </TabsList>
+          <TabsContent value='contacts' className='overflow-x-auto w-full'>
+            Table ...
+          </TabsContent>
+          <TabsContent value='segments'>
+            Segments
+          </TabsContent>
+        </Tabs>
         <ContactOverviewCards />
+
         <Suspense
           key={key}
           fallback={

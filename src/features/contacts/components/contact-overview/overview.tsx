@@ -33,7 +33,7 @@ const fetchContactOverData = (): Promise<any> => {
                     }
                 ]
             );
-        }, 3000);
+        }, 1000);
     });
 };
 

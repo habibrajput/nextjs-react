@@ -17,8 +17,6 @@ import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import GithubSignInButton from './github-auth-button';
 import { toast } from 'sonner';
-import { AuthError } from '@auth/core/errors';
-import { error } from 'next/dist/build/output/log';
 
 const formSchema = z.object({
   email: z.string().email({ message: 'Enter a valid email address' }),
@@ -42,40 +40,28 @@ export default function UserAuthForm() {
     defaultValues
   });
 
-  const onSubmit = async  (data: UserFormValue) => {
+  const onSubmit = async (data: UserFormValue) => {
     // startTransition(() => {
-      setIsSigningIn(true);
-
-      // setTimeout(() => {
-      signIn('credentials', {
-        email: data.email,
-        password: data.password,
-        redirect: false
-        //callbackUrl: callbackUrl ?? '/dashboard'
-      })
-        .then((data) => {
-          console.log('----->', data);
+    setIsSigningIn(true);
+    signIn('credentials', {
+      email: data.email,
+      password: data.password,
+      redirect: false
+    })
+      .then((data) => {
+        console.log(data);
+        if (data.error === 'CredentialsSignin') {
           setSignInError(data.code);
-          toast.success(data.code);
-        })
-        .catch((error) => {
-          if (error instanceof AuthError) {
-            switch (error.type) {
-              case "CredentialsSignin":
-                return { msg: "Invalid credentials" , status: "error"};
-              case "CredentialsSignin":
-                throw error;
-              default:
-                return { msg: "Something went wrong", status: "error" };
-            }
-          }
-          toast.error('Sign In Failed!');
-        })
-        .finally(() => {
-          setIsSigningIn(false);
-        });
-
-      // }, 3000);
+        } else {
+          window.location.href = '/dashboard';
+        }
+      })
+      .catch(() => {
+        toast.error('Sign In Failed!');
+      })
+      .finally(() => {
+        setIsSigningIn(false);
+      });
     // });
   };
 

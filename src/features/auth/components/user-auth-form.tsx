@@ -18,6 +18,7 @@ import { toast } from 'sonner';
 import * as z from 'zod';
 import { useState } from 'react';
 import GithubSignInButton from './github-auth-button';
+import { al } from '@faker-js/faker/dist/airline-BUL6NtOJ';
 
 const formSchema = z.object({
   email: z.string().email({ message: 'Enter a valid email address' }),
@@ -32,8 +33,8 @@ export default function UserAuthForm() {
   const [isSigningIn, setIsSigningIn] = useState(false);
   const [loading, startTransition] = useTransition();
   const defaultValues = {
-    email: 'habib@email.com',
-    password: 'habib@email.com'
+    email: 'habibee1@gmail.com',
+    password: 'habib@gmail.com'
   };
   const form = useForm<UserFormValue>({
     resolver: zodResolver(formSchema),
@@ -43,10 +44,13 @@ export default function UserAuthForm() {
   const onSubmit = (data: UserFormValue) => {
     startTransition(() => {
       setIsSigningIn(true); 
-      setTimeout(() => {
+
+      // setTimeout(() => {
         signIn('credentials', {
           email: data.email,
-          callbackUrl: callbackUrl ?? '/dashboard'
+          password: data.password,
+          redirect: false,
+          //callbackUrl: callbackUrl ?? '/dashboard'
         })
           .then(() => {
             toast.success('Signed In Successfully!');
@@ -57,7 +61,7 @@ export default function UserAuthForm() {
           .finally(() => {
             setIsSigningIn(false);
           });
-      }, 3000);
+      // }, 3000);
     });
   };
 

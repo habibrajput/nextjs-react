@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Icons } from '@/components/icons';
 import DefaultDrawer from '@/components/drawer/default-drawer';
@@ -24,14 +24,14 @@ export default function AddContactWrapper() {
     setIsOpen(false);
     setTimeout(resetMode, 300);
   };
-  const handleSetMode = (mode: Mode) => {
-    if(mode === 'upload'){
-      setWidth(1000)
-    }else{
+
+  useEffect(() => {
+    if (mode === 'upload') {
+      setWidth(800)
+    } else {
       setWidth(600)
     }
-    setMode(mode);
-  };
+  }, [mode]);
 
   return (
     <>
@@ -55,13 +55,13 @@ export default function AddContactWrapper() {
                   icon={<Icons.plus className='h-5 w-5' />}
                   title={modeMap['create'].title}
                   description={modeMap['create'].description}
-                  onClick={() => handleSetMode('create')}
+                  onClick={() => setMode('create')}
                 />
                 <OptionCard
                   icon={<Icons.fileUp className='h-5 w-5' />}
                   title={modeMap['upload'].title}
                   description={modeMap['upload'].description}
-                  onClick={() => handleSetMode('upload')}
+                  onClick={() => setMode('upload')}
                 />
               </div>
             </div>

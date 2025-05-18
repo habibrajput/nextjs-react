@@ -37,6 +37,8 @@ export default async function Page(props: pageProps) {
           <AddContactWrapper />
         </div>
 
+        <ContactOverviewCards />
+        
         <Tabs defaultValue="contacts" className="w-full">
           <TabsList className="h-10 w-fill">
             <TabsTrigger value="contacts">
@@ -55,7 +57,6 @@ export default async function Page(props: pageProps) {
             Segments
           </TabsContent>
         </Tabs>
-        <ContactOverviewCards />
 
         <Suspense
           key={key}

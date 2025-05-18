@@ -6,11 +6,200 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
 import { Stepper, Step, StepIndicator, StepContent, StepTitle, StepDescription, StepperFooter } from "@/components/ui/stepper"
 import { Check, CreditCard, Home, User } from "lucide-react";
 import { Icons } from "@/components/icons"
 import { UploadContactsForm } from "@/features/contacts/components/add-contact/upload-contact-form"
+import { ColumnDef, ColumnFiltersState, SortingState, VisibilityState, flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel,  useReactTable} from "@tanstack/react-table"
+import { ArrowUpDown } from "lucide-react"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+
+const data: Payment[] = [
+    {
+        id: "m5gr84i9",
+        amount: 316,
+        status: "success",
+        email: "ken99@example.com",
+    },
+    {
+        id: "3u1reuv4",
+        amount: 242,
+        status: "success",
+        email: "Abe45@example.com",
+    },
+    {
+        id: "derv1ws0",
+        amount: 837,
+        status: "processing",
+        email: "Monserrat44@example.com",
+    },
+    {
+        id: "5kma53ae",
+        amount: 874,
+        status: "success",
+        email: "Silas22@example.com",
+    },
+    {
+        id: "bhqecj4p",
+        amount: 721,
+        status: "failed",
+        email: "carmella@example.com",
+    },
+]
+
+export type Payment = {
+    id: string
+    amount: number
+    status: "pending" | "processing" | "success" | "failed"
+    email: string
+}
+
+export const columns: ColumnDef<Payment>[] = [
+    {
+        id: "select",
+        header: ({ table }) => (
+            <Checkbox
+                checked={
+                    table.getIsAllPageRowsSelected() ||
+                    (table.getIsSomePageRowsSelected() && "indeterminate")
+                }
+                onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+                aria-label="Select all"
+            />
+        ),
+        cell: ({ row }) => (
+            <Checkbox
+                checked={row.getIsSelected()}
+                onCheckedChange={(value) => row.toggleSelected(!!value)}
+                aria-label="Select row"
+            />
+        ),
+        enableSorting: false,
+        enableHiding: false,
+    },
+    {
+        accessorKey: "status",
+        header: "Status",
+        cell: ({ row }) => (
+            <div className="capitalize">{row.getValue("status")}</div>
+        ),
+    },
+    {
+        accessorKey: "email",
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Email
+                    <ArrowUpDown />
+                </Button>
+            )
+        },
+        cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
+    },
+    {
+        accessorKey: "amount",
+        header: () => <div className="text-right">Amount</div>,
+        cell: ({ row }) => {
+            const amount = parseFloat(row.getValue("amount"))
+
+            // Format the amount as a dollar amount
+            const formatted = new Intl.NumberFormat("en-US", {
+                style: "currency",
+                currency: "USD",
+            }).format(amount)
+
+            return <div className="text-right font-medium">{formatted}</div>
+        },
+    },
+]
+
+export function DataTableDemo() {
+    const [sorting, setSorting] = useState<SortingState>([])
+    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(
+        []
+    )
+    const [columnVisibility, setColumnVisibility] =
+        useState<VisibilityState>({})
+    const [rowSelection, setRowSelection] = useState({})
+
+    const table = useReactTable({
+        data,
+        columns,
+        onSortingChange: setSorting,
+        onColumnFiltersChange: setColumnFilters,
+        getCoreRowModel: getCoreRowModel(),
+        getPaginationRowModel: getPaginationRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+        getFilteredRowModel: getFilteredRowModel(),
+        onColumnVisibilityChange: setColumnVisibility,
+        onRowSelectionChange: setRowSelection,
+        state: {
+            sorting,
+            columnFilters,
+            columnVisibility,
+            rowSelection,
+        },
+    })
+
+    return (
+        <div className="w-full">
+            <div className="rounded-md border">
+                <Table>
+                    <TableHeader>
+                        {table.getHeaderGroups().map((headerGroup) => (
+                            <TableRow key={headerGroup.id}>
+                                {headerGroup.headers.map((header) => {
+                                    return (
+                                        <TableHead key={header.id}>
+                                            {header.isPlaceholder
+                                                ? null
+                                                : flexRender(
+                                                    header.column.columnDef.header,
+                                                    header.getContext()
+                                                )}
+                                        </TableHead>
+                                    )
+                                })}
+                            </TableRow>
+                        ))}
+                    </TableHeader>
+                    <TableBody>
+                        {table.getRowModel().rows?.length ? (
+                            table.getRowModel().rows.map((row) => (
+                                <TableRow
+                                    key={row.id}
+                                    data-state={row.getIsSelected() && "selected"}
+                                >
+                                    {row.getVisibleCells().map((cell) => (
+                                        <TableCell key={cell.id}>
+                                            {flexRender(
+                                                cell.column.columnDef.cell,
+                                                cell.getContext()
+                                            )}
+                                        </TableCell>
+                                    ))}
+                                </TableRow>
+                            ))
+                        ) : (
+                            <TableRow>
+                                <TableCell
+                                    colSpan={columns.length}
+                                    className="h-24 text-center"
+                                >
+                                    No results.
+                                </TableCell>
+                            </TableRow>
+                        )}
+                    </TableBody>
+                </Table>
+            </div>
+        </div>
+    )
+}
 
 type FormProps = {
     onCancel: () => void
@@ -59,20 +248,7 @@ export default function StepperDemo({ onCancel, onSuccess }: FormProps) {
             content: (
                 <div className="grid gap-4">
                     <h1 className="text-2xl font-semibold"> Mapping data </h1>
-                    <div className="grid gap-2">
-                        <Label htmlFor="address">Street Address</Label>
-                        <Textarea
-                            id="address"
-                            name="address"
-                            value={formData.address}
-                            onChange={handleChange}
-                            placeholder="123 Main St"
-                        />
-                    </div>
-                    <div className="grid gap-2">
-                        <Label htmlFor="city">City</Label>
-                        <Input id="city" name="city" value={formData.city} onChange={handleChange} placeholder="New York" />
-                    </div>
+                    <DataTableDemo />
                 </div>
             ),
         },
@@ -116,8 +292,8 @@ export default function StepperDemo({ onCancel, onSuccess }: FormProps) {
     ]
 
     return (
-        <div className="container max-w-3xl py-5">
-            <div className="flex gap-10">
+        <div className="container w-full py-5">
+            <div className="flex gap-6">
                 <div className="w-1/3 bg-muted rounded-xl py-5 px-3">
                     <Stepper
                         activeStep={activeStep}
@@ -133,26 +309,26 @@ export default function StepperDemo({ onCancel, onSuccess }: FormProps) {
                             </Step>
                         ))}
                         <StepperFooter>
-                            <Button 
-                                className="rounded-lg p-2" 
-                                variant="outline" 
-                                onClick={handleBack} 
+                            <Button
+                                className="rounded-lg p-2"
+                                variant="outline"
+                                onClick={handleBack}
                                 disabled={activeStep === 0}
                             >
-                                <Icons.chevronLeft 
+                                <Icons.chevronLeft
                                     onClick={handleBack}
-                                    className="mr-2 h-4 w-4" 
+                                    className="mr-2 h-4 w-4"
                                 />
                             </Button>
-                            <Button 
-                                className="rounded-lg p-2" 
-                                variant="outline" 
-                                onClick={handleNext} 
+                            <Button
+                                className="rounded-lg p-2"
+                                variant="outline"
+                                onClick={handleNext}
                                 disabled={activeStep === steps.length - 1}
                             >
-                                <Icons.chevronRight 
-                                onClick={handleNext}
-                                    className="mr-2 h-4 w-4" 
+                                <Icons.chevronRight
+                                    onClick={handleNext}
+                                    className="mr-2 h-4 w-4"
                                 />
                             </Button>
                         </StepperFooter>

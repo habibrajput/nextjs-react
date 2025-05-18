@@ -1,10 +1,10 @@
 import { NextAuthConfig } from 'next-auth';
 import CredentialProvider from 'next-auth/providers/credentials';
-import GithubProvider from 'next-auth/providers/github';
+import { BackEndUrl } from './constants';
+import { use } from 'react';
 
 const authConfig = {
   providers: [
-    GithubProvider({}),
     CredentialProvider({
       credentials: {
         email: {
@@ -16,11 +16,24 @@ const authConfig = {
       },
       async authorize(credentials) {
         const user = {
-          id: '1',
-          name: 'John',
-          email: credentials?.email as string
+          email: credentials?.email as string,
+          password: credentials?.password as string
         };
-        if (user) {
+
+        const res = await fetch(BackEndUrl + "/auth/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            email: user.email,
+            password: user.password
+          })
+        });
+        
+        const getUser = await res.json()
+
+        if (getUser) {
           // Any object returned will be saved in `user` property of the JWT
           return user;
         } else {
@@ -34,7 +47,16 @@ const authConfig = {
   ],
   pages: {
     signIn: '/' //sigin page
+  },
+  callbacks:{
+    async jwt({token,user}){
+      if (user){
+
+      }
+    }
   }
 } satisfies NextAuthConfig;
 
 export default authConfig;
+// https://www.youtube.com/watch?v=Jrolu1_G9FI
+https://youtu.be/khNwrFJ-Xqs?t=3233

@@ -2,6 +2,11 @@ import { NextAuthConfig } from 'next-auth';
 import CredentialProvider from 'next-auth/providers/credentials';
 import { BASE_URL } from './constants';
 import GithubProvider from 'next-auth/providers/github';
+import { CredentialsSignin } from '@auth/core/errors';
+
+class InvalidLoginError extends CredentialsSignin {
+  code = 'Invalid identifier or password';
+}
 
 const authConfig = {
   providers: [
@@ -15,49 +20,42 @@ const authConfig = {
           type: 'password'
         }
       },
-      async authorize(credentials) {
-        const user = {
-          email: credentials?.email as string,
-          password: credentials?.password as string
-        };
-
-        // return (
-        //   (await fetch(BASE_URL + '/auth/login', {
-        //     method: 'POST',
-        //     headers: {
-        //       'Content-Type': 'application/json'
-        //     },
-        //     body: JSON.stringify(user)
-        //   })
-        //     .then((response) => {
-        //       return response;
-        //     })
-        //     .catch((error) => {
-        //       console.log("->>>>>>>authconfg",error);
-        //       throw new Error(error.response.data.message);
-        //     })) || null
-        // );
+      authorize: async (credentials) => {
+        throw new InvalidLoginError();
         try {
-          const getUser = await fetch(BASE_URL + '/auth/login', {
+          const res = await fetch(`${BASE_URL}/auth/login`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
             },
-            body: JSON.stringify(user)
+            body: JSON.stringify(credentials)
           });
 
-          if (getUser.status !== 401) {
-            console.log('->>>if', getUser.status);
-            return getUser;
+          if (!res.ok && res.status === 401) {
+            // Login failed
+            return null;
           }
-          console.log('->>>else', await getUser.json());
+
+          const user = await res.json();
+
+          // Validate the returned user object
+          if (user && user.id) {
+            return user;
+          }
+
           return null;
         } catch (error) {
-          console.log('->>>>>>>authconfg', error);
+          console.error('Auth error:', error);
+          return null;
         }
       }
     })
   ],
+  logger: {
+    error() {},
+    warn() {},
+    debug() {}
+  },
   pages: {
     signIn: '/' //sigin page
   },

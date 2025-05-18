@@ -17,6 +17,8 @@ import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import GithubSignInButton from './github-auth-button';
 import { toast } from 'sonner';
+import { AuthError } from '@auth/core/errors';
+import { error } from 'next/dist/build/output/log';
 
 const formSchema = z.object({
   email: z.string().email({ message: 'Enter a valid email address' }),
@@ -40,8 +42,8 @@ export default function UserAuthForm() {
     defaultValues
   });
 
-  const onSubmit = (data: UserFormValue) => {
-    startTransition(() => {
+  const onSubmit = async  (data: UserFormValue) => {
+    // startTransition(() => {
       setIsSigningIn(true);
 
       // setTimeout(() => {
@@ -53,17 +55,28 @@ export default function UserAuthForm() {
       })
         .then((data) => {
           console.log('----->', data);
-          setSignInError(data.error);
-          toast.success(data.error);
+          setSignInError(data.code);
+          toast.success(data.code);
         })
-        .catch(() => {
+        .catch((error) => {
+          if (error instanceof AuthError) {
+            switch (error.type) {
+              case "CredentialsSignin":
+                return { msg: "Invalid credentials" , status: "error"};
+              case "CredentialsSignin":
+                throw error;
+              default:
+                return { msg: "Something went wrong", status: "error" };
+            }
+          }
           toast.error('Sign In Failed!');
         })
         .finally(() => {
           setIsSigningIn(false);
         });
+
       // }, 3000);
-    });
+    // });
   };
 
   return (

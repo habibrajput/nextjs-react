@@ -42,32 +42,19 @@ const authConfig = {
     error() {}
   },
   pages: {
-    signIn: '/'
+    signIn: '/signin'
   },
   session: {
     strategy: 'jwt'
   },
   callbacks: {
     async jwt({ token, user }: { token: any; user: any }) {
-      if (user) {
-        token.id = user.id;
-        token.email = user.email;
-        token.firstName = user.firstName;
-        token.lastName = user.lastName;
-        token.roles = user.roles;
-      }
-      return token;
+      return { ...token, ...user }
     },
-    async session({ token, session }: { token: any; session: any }) {
-      session.user = {
-        id: token.id,
-        email: token.email,
-        firstName: token.firstName,
-        lastName: token.lastName,
-        roles: token.roles
-      };
+    async session({ session, token, user }: { session: any; token: any; user: any }) {
+      session.user = token as any;
       return session;
-    }
+    },
   },
 
   cookies: {

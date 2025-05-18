@@ -53,7 +53,6 @@ export function CreateContactForm({ onCancel, onSuccess }: CreateContactFormProp
 
     // Simulate API call
     setTimeout(() => {
-      console.log(values)
       setIsSubmitting(false)
       onSuccess()
     }, 1500)

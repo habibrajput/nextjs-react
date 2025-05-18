@@ -46,14 +46,14 @@ export default function UserAuthForm() {
     signIn('credentials', {
       email: data.email,
       password: data.password,
-      redirect: false
+      // callbackUrl: callbackUrl ?? '/',
+      redirect:false
     })
       .then((data) => {
-        console.log(data);
         if (data.error === 'CredentialsSignin') {
           setSignInError(data.code);
-        } else {
-          window.location.href = '/dashboard';
+        }else{
+          window.location.href = callbackUrl ?? '/dashboard/overview'
         }
       })
       .catch(() => {

@@ -14,6 +14,7 @@ const nextConfig = {
       }
     ]
   },
+  allowedDevOrigins: ['localhost:3025', '192.168.248.118'],
   transpilePackages: ['geist']
 };
 

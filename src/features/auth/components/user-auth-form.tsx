@@ -12,17 +12,15 @@ import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signIn } from 'next-auth/react';
 import { useSearchParams } from 'next/navigation';
-import { useTransition } from 'react';
+import { useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
 import * as z from 'zod';
-import { useState } from 'react';
 import GithubSignInButton from './github-auth-button';
-import { al } from '@faker-js/faker/dist/airline-BUL6NtOJ';
+import { toast } from 'sonner';
 
 const formSchema = z.object({
   email: z.string().email({ message: 'Enter a valid email address' }),
-  password: z.string().min(5, { message: "Must be 5 or more characters long" })
+  password: z.string().min(5, { message: 'Must be 5 or more characters long' })
 });
 
 type UserFormValue = z.infer<typeof formSchema>;
@@ -31,9 +29,10 @@ export default function UserAuthForm() {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get('callbackUrl');
   const [isSigningIn, setIsSigningIn] = useState(false);
+  const [signInError, setSignInError] = useState(null);
   const [loading, startTransition] = useTransition();
   const defaultValues = {
-    email: 'habibee1@gmail.com',
+    email: 'habib@gmail.com',
     password: 'habib@gmail.com'
   };
   const form = useForm<UserFormValue>({
@@ -43,24 +42,26 @@ export default function UserAuthForm() {
 
   const onSubmit = (data: UserFormValue) => {
     startTransition(() => {
-      setIsSigningIn(true); 
+      setIsSigningIn(true);
 
       // setTimeout(() => {
-        signIn('credentials', {
-          email: data.email,
-          password: data.password,
-          redirect: false,
-          //callbackUrl: callbackUrl ?? '/dashboard'
+      signIn('credentials', {
+        email: data.email,
+        password: data.password,
+        redirect: false
+        //callbackUrl: callbackUrl ?? '/dashboard'
+      })
+        .then((data) => {
+          console.log('----->', data);
+          setSignInError(data.error);
+          toast.success(data.error);
         })
-          .then(() => {
-            toast.success('Signed In Successfully!');
-          })
-          .catch(() => {
-            toast.error('Sign In Failed!');
-          })
-          .finally(() => {
-            setIsSigningIn(false);
-          });
+        .catch(() => {
+          toast.error('Sign In Failed!');
+        })
+        .finally(() => {
+          setIsSigningIn(false);
+        });
       // }, 3000);
     });
   };
@@ -109,6 +110,13 @@ export default function UserAuthForm() {
               </FormItem>
             )}
           />
+          {signInError && (
+            <>
+              <div className='ml-auto w-full rounded-sm bg-red-50 p-2 text-center text-sm text-red-600'>
+                <span>{signInError}</span>
+              </div>
+            </>
+          )}
 
           <LoadingButton
             disabled={isSigningIn}
@@ -116,7 +124,7 @@ export default function UserAuthForm() {
             type='submit'
             isLoading={isSigningIn}
           >
-            {isSigningIn ? 'Sign In...': 'Sign In'}
+            {isSigningIn ? 'Sign In...' : 'Sign In'}
           </LoadingButton>
         </form>
       </Form>

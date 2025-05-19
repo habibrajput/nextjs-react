@@ -17,6 +17,7 @@ import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import GithubSignInButton from './github-auth-button';
 import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 
 const formSchema = z.object({
   email: z.string().email({ message: 'Enter a valid email address' }),
@@ -31,6 +32,7 @@ export default function UserAuthForm() {
   const [isSigningIn, setIsSigningIn] = useState(false);
   const [signInError, setSignInError] = useState(null);
   const [loading, startTransition] = useTransition();
+  const router = useRouter();
   const defaultValues = {
     email: 'habib@gmail.com',
     password: 'habib@gmail.com'
@@ -46,14 +48,13 @@ export default function UserAuthForm() {
     signIn('credentials', {
       email: data.email,
       password: data.password,
-      // callbackUrl: callbackUrl ?? '/',
       redirect:false
     })
       .then((data) => {
         if (data.error === 'CredentialsSignin') {
           setSignInError(data.code);
         }else{
-          window.location.href = callbackUrl ?? '/dashboard/overview'
+          router.push(callbackUrl ?? '/dashboard/overview');
         }
       })
       .catch(() => {

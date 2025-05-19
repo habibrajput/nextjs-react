@@ -9,6 +9,7 @@ import { cn } from '@/lib/utils';
 import { fontVariables } from '@/lib/font';
 import './globals.css';
 import './theme.css';
+import AuthProvider from '@/providers/AuthProvider';
 
 const META_THEME_COLORS = {
   light: '#ffffff',
@@ -59,13 +60,15 @@ export default async function RootLayout({
       >
         <NextTopLoader showSpinner={false} />
         <NuqsAdapter>
-          <Providers
-            session={session}
-            activeThemeValue={activeThemeValue as string}
-          >
-            <Toaster />
-            {children}
-          </Providers>
+          <AuthProvider>
+            <Providers
+              session={session}
+              activeThemeValue={activeThemeValue as string}
+            >
+              <Toaster />
+              {children}
+            </Providers>
+          </AuthProvider>
         </NuqsAdapter>
       </body>
     </html>

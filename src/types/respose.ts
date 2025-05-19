@@ -1,4 +1,4 @@
-interface Response {
+interface APIResponse {
   _metaData: {
     statusCode: number;
     message: string | [];

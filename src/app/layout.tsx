@@ -11,6 +11,7 @@ import './globals.css';
 import './theme.css';
 import AuthProvider from '@/providers/AuthProvider';
 import TanstackProvider from '@/providers/TanstackProvider';
+import ReduxProviders from '@/providers/ReduxProvider';
 
 const META_THEME_COLORS = {
   light: '#ffffff',
@@ -68,7 +69,7 @@ export default async function RootLayout({
                 activeThemeValue={activeThemeValue as string}
               >
                 <Toaster />
-                {children}
+                <ReduxProviders>{children}</ReduxProviders>
               </Providers>
             </TanstackProvider>
           </AuthProvider>

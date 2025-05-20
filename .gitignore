@@ -38,4 +38,7 @@ next-env.d.ts
 .vscode
 
 #package-lock
-.package-lock.json
+package-lock.json
+
+#.env.local
+.env.local

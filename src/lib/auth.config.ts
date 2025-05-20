@@ -1,5 +1,4 @@
 import CredentialProvider from 'next-auth/providers/credentials';
-import { BASE_URL } from './constants';
 import GithubProvider from 'next-auth/providers/github';
 import { CredentialsSignin } from '@auth/core/errors';
 import { NextAuthConfig } from 'next-auth';
@@ -21,7 +20,7 @@ const authConfig = {
         }
       },
       authorize: async (credentials) => {
-        const rawResponse: Response = await fetch(`${BASE_URL}/auth/login`, {
+        const rawResponse: Response = await fetch(`${process.env.API_BASE_URL}/auth/login`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

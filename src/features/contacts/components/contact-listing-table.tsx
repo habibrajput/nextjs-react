@@ -9,7 +9,7 @@ export default function ContactTableWrapper() {
     return (
         <ProductTable
             data={contacts.data.data.items}
-            totalItems={20}
+            totalItems={contacts.data.data.meta.totalItems}
             columns={columns}
         />
     )

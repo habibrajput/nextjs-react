@@ -37,7 +37,7 @@ export default async function Page(props: pageProps) {
           <AddContactWrapper />
         </div>
 
-        <ContactOverviewCards />
+        {/* <ContactOverviewCards /> */}
         
         <Tabs defaultValue="contacts" className="w-full">
           <TabsList className="h-10 w-fill">

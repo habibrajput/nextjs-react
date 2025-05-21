@@ -1,46 +1,31 @@
-import { auth } from '@/lib/auth';
+"use client";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-const getToken = async () => await auth;
 
-const defaultHeaders = {
-  'Content-Type': 'application/json',
-  Accept: 'application/json',
-  Authorization: `Bearer ${getToken}`
-};
+const defaultHeaders = ((authToken: string) => {
+  return {
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${authToken}`
+  }
+});
 
 type RequestOptions = {
   headers?: Record<string, string>;
 };
 
 // Helper to handle fetch response and errors
-async function handleResponse(response: Response) {
-  const contentType = response.headers.get('content-type');
-  let data = null;
-
-  if (contentType && contentType.includes('application/json')) {
-    data = await response.json();
-  } else {
-    data = await response.text();
-  }
-
-  if (!response.ok) {
-    const error = data?.message || response.statusText || 'API error';
-    throw new Error(error);
-  }
-
+async function handleResponse(response: Response) : Promise<Response> {
+  let data = await response.json();
   return data;
 }
 
-async function get(endpoint: string, options: RequestOptions = {}) {
+async function get(endpoint: string, authToken: string, options: RequestOptions = {}) : Promise<Response> {
   const config = {
     method: 'GET',
     headers: {
-      ...defaultHeaders,
-      ...(options.headers || {})
+      ...defaultHeaders(authToken),
     },
-    ...options
   };
 
   const response = await fetch(`${BASE_URL}${endpoint}`, config);
@@ -91,7 +76,7 @@ async function del(endpoint: string, options: RequestOptions = {}) {
   return handleResponse(response);
 }
 
-export const apiClient = {
+export const apiServices = {
   get,
   post,
   put,

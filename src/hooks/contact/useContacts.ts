@@ -1,24 +1,60 @@
+'use client';
+
+import { useSession } from 'next-auth/react';
 import { useQuery } from '@tanstack/react-query';
 
-type Post = {
+export type Contact = {
   id: number;
-  title: string;
-  body: string;
+  creatorId: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  smsPhoneNumber: string;
+  whatsAppPhoneNumber: string;
+  company: string | null;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
+  creator: {
+    id: number;
+    firstName: string;
+    lastName: string;
+    email: string;
+  };
+  groups: {
+    id: number;
+    name: string;
+  };
 };
 
-const fetchPosts = async (limit = 10): Promise<Array<Post>> => {
-  const response = await fetch('https://jsonplaceholder.typicode.com/posts');
-  const data = await response.json();
-  return data.filter((x: Post) => x.id <= limit);
+const fetchContacts = async (
+  authToken: string | null
+): Promise<Array<Contact>> => {
+  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+
+  const rawResponse = await fetch(`${baseUrl}/contacts`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${authToken}`
+    }
+  });
+
+  if (!rawResponse.ok) {
+    const errorBody = await rawResponse.text();
+    throw new Error(`Request failed: ${rawResponse.status} - ${errorBody}`);
+  }
+
+  return await rawResponse.json();
 };
 
-const usePosts = (limit: number) => {
+const useContacts = () => {
+  const { data: session } = useSession();
+
   return useQuery({
-    queryKey: ['posts', limit],
-    queryFn: () => fetchPosts(limit)
+    queryKey: ['posts'],
+    queryFn: () => fetchContacts(session?.user?.token ?? '')
   });
 };
 
-export { usePosts, fetchPosts };
-
-//  const { data: posts, isLoading, isError, error } = usePosts(limit)
+export { useContacts, fetchContacts };

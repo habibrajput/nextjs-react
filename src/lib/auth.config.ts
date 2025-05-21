@@ -20,7 +20,7 @@ const authConfig = {
         }
       },
       authorize: async (credentials) => {
-        const rawResponse: Response = await fetch(`${process.env.API_BASE_URL}/auth/login`, {
+        const rawResponse: Response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/login`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

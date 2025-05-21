@@ -32,48 +32,64 @@ export const columns: ColumnDef<Product>[] = [
     enableSorting: false,
     enableHiding: false,
   },
+  // {
+  //   id: 'firstName',
+  //   accessorKey: 'firstName',
+  //   header: ({ column }: { column: Column<Product, unknown> }) => (
+  //     <DataTableColumnHeader column={column} title='firstName' />
+  //   ),
+  //   cell: ({ cell }) => <div>{cell.getValue<Product['firstName']>()}</div>,
+  //   meta: {
+  //     label: 'firstName',
+  //     placeholder: 'Search products...',
+  //     variant: 'text',
+  //     icon: Text
+  //   },
+  //   enableColumnFilter: true
+  // },
   {
-    id: 'name',
-    accessorKey: 'name',
-    header: ({ column }: { column: Column<Product, unknown> }) => (
-      <DataTableColumnHeader column={column} title='Name' />
-    ),
-    cell: ({ cell }) => <div>{cell.getValue<Product['name']>()}</div>,
-    meta: {
-      label: 'Name',
-      placeholder: 'Search products...',
-      variant: 'text',
-      icon: Text
-    },
-    enableColumnFilter: true
+    accessorKey: 'creator.firstName',
+    header: 'Creator'
   },
   {
-    id: 'category',
-    accessorKey: 'category',
-    header: ({ column }: { column: Column<Product, unknown> }) => (
-      <DataTableColumnHeader column={column} title='Category' />
-    ),
-    cell: ({ cell }) => {
-      const status = cell.getValue<Product['category']>();
-      const Icon = status === 'active' ? CheckCircle2 : XCircle;
+    accessorKey: 'firstName',
+    header: 'lastName'
+  },
+  {
+    accessorKey: 'lastName',
+    header: 'lastName'
+  },
+  {
+    accessorKey:"smsPhoneNumber",
+    header: 'SMS Phone Number'
+  },
+  // {
+  //   id: 'email',
+  //   accessorKey: 'email',
+  //   header: ({ column }: { column: Column<Product, unknown> }) => (
+  //     <DataTableColumnHeader column={column} title='email' />
+  //   ),
+  //   cell: ({ cell }) => {
+  //     const status = cell.getValue<Product['email']>();
+  //     const Icon = status === 'active' ? CheckCircle2 : XCircle;
 
-      return (
-        <Badge variant='outline' className='capitalize'>
-          <Icon />
-          {status}
-        </Badge>
-      );
-    },
-    enableColumnFilter: true,
-    meta: {
-      label: 'categories',
-      variant: 'multiSelect',
-      options: CATEGORY_OPTIONS
-    }
-  },
+  //     return (
+  //       <Badge variant='outline' className='capitalize'>
+  //         <Icon />
+  //         {status}
+  //       </Badge>
+  //     );
+  //   },
+  //   enableColumnFilter: true,
+  //   meta: {
+  //     label: 'categories',
+  //     variant: 'multiSelect',
+  //     options: CATEGORY_OPTIONS
+  //   }
+  // },
   {
-    accessorKey: 'price',
-    header: 'PRICE'
+    accessorKey: 'email',
+    header: 'email'
   },
   {
     accessorKey: 'description',

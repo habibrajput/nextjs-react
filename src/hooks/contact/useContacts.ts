@@ -53,7 +53,8 @@ const useContacts = () => {
 
   return useQuery({
     queryKey: ['posts'],
-    queryFn: () => fetchContacts(session?.user?.token ?? '')
+    queryFn: () => fetchContacts(session?.user?.token ?? ''),
+    suspense: true,
   });
 };
 

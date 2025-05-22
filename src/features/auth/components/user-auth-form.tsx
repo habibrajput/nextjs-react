@@ -11,13 +11,12 @@ import {
 import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signIn } from 'next-auth/react';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import GithubSignInButton from './github-auth-button';
 import { toast } from 'sonner';
-import { useRouter } from 'next/navigation';
 
 const formSchema = z.object({
   email: z.string().email({ message: 'Enter a valid email address' }),
@@ -30,7 +29,7 @@ export default function UserAuthForm() {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get('callbackUrl');
   const [isSigningIn, setIsSigningIn] = useState(false);
-  const [signInError, setSignInError] = useState(null);
+  const [signInError, setSignInError] = useState('');
   const [loading, startTransition] = useTransition();
   const router = useRouter();
   const defaultValues = {
@@ -43,27 +42,29 @@ export default function UserAuthForm() {
   });
 
   const onSubmit = async (data: UserFormValue) => {
-    // startTransition(() => {
-    setIsSigningIn(true);
-    signIn('credentials', {
-      email: data.email,
-      password: data.password,
-      redirect:false
-    })
-      .then((data) => {
-        if (data.error === 'CredentialsSignin') {
-          setSignInError(data.code);
-        }else{
+    startTransition(() => {
+      setIsSigningIn(true);
+      signIn('credentials', {
+        email: data.email,
+        password: data.password,
+        redirect: false
+      })
+        .then((data) => {
+          if (data.error === 'CredentialsSignin') {
+            setSignInError('Invalid identifier or password');
+          } else if (data.error) {
+            setSignInError('Server Error');
+          }
+
           router.push(callbackUrl ?? '/dashboard/overview');
-        }
-      })
-      .catch(() => {
-        toast.error('Sign In Failed!');
-      })
-      .finally(() => {
-        setIsSigningIn(false);
-      });
-    // });
+        })
+        .catch(() => {
+          toast.error('Sign In Failed!');
+        })
+        .finally(() => {
+          setIsSigningIn(false);
+        });
+    });
   };
 
   return (

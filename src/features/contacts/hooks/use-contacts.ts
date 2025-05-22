@@ -4,19 +4,15 @@ import { useSession } from 'next-auth/react';
 import { useQuery } from '@tanstack/react-query';
 import { apiServices } from '@/services/apiServices';
 
-const fetchContacts = async (
-  authToken: string
-) => {
+const fetchContacts = async (authToken: string) => {
   return await apiServices.get('/contacts', authToken);
 };
 
 const useContacts = () => {
   const { data: session } = useSession();
-
   return useQuery({
-    queryKey: ['posts'],
-    queryFn: () => fetchContacts(session?.user?.token ?? ''),
-    suspense: true,
+    queryKey: ['contacts'],
+    queryFn: () => fetchContacts(session?.user?.token ?? '')
   });
 };
 

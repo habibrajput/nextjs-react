@@ -1,11 +1,6 @@
 import CredentialProvider from 'next-auth/providers/credentials';
 import GithubProvider from 'next-auth/providers/github';
-import { CredentialsSignin } from '@auth/core/errors';
 import { NextAuthConfig } from 'next-auth';
-
-class InvalidLoginError extends CredentialsSignin {
-  code = 'Invalid identifier or password';
-}
 
 const authConfig = {
   providers: [
@@ -20,20 +15,23 @@ const authConfig = {
         }
       },
       authorize: async (credentials) => {
-        const rawResponse: Response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/login`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(credentials)
-        });
-        const response = await rawResponse.json();
+        try {
+          const rawResponse: Response = await fetch(
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/login`,
+            {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(credentials)
+            }
+          );
 
-        if (response._metaData.statusCode === 401) {
-          throw new InvalidLoginError();
+          const response = await rawResponse.json();
+          return response.data;
+        } catch (error) {
+          throw error;
         }
-
-        return response.data;
       }
     })
   ],
@@ -48,12 +46,12 @@ const authConfig = {
   },
   callbacks: {
     async jwt({ token, user }: { token: any; user: any }) {
-      return { ...token, ...user }
+      return { ...token, ...user };
     },
-    async session({ session, token, user }: { session: any; token: any; user: any }) {
+    async session({ session, token }: { session: any; token: any; user: any }) {
       session.user = token as any;
       return session;
-    },
+    }
   },
 
   cookies: {

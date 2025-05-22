@@ -16,15 +16,14 @@ type RequestOptions = {
 
 // Helper to handle fetch response and errors
 async function handleResponse(response: Response) : Promise<Response> {
-  let data = await response.json();
-  return data;
+  return await response.json();
 }
 
 async function get(endpoint: string, authToken: string, options: RequestOptions = {}) : Promise<Response> {
   const config = {
     method: 'GET',
     headers: {
-      ...defaultHeaders(authToken),
+    ...defaultHeaders(authToken),
     },
   };
 

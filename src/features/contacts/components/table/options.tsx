@@ -1,3 +1,7 @@
+"use client";
+
+import { useGroups } from "../../hooks/use-groups";
+
 export const CATEGORY_OPTIONS = [
   { value: 'Electronics', label: 'Electronics' },
   { value: 'Furniture', label: 'Furniture' },

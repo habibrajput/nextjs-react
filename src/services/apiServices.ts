@@ -2,77 +2,69 @@
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-
-const defaultHeaders = ((authToken: string) => {
+const setHeaders = ((authToken: string) => {
   return {
     'Content-Type': 'application/json',
     Authorization: `Bearer ${authToken}`
   }
 });
 
-type RequestOptions = {
-  headers?: Record<string, string>;
-};
+const setBody = ((body: {}) => {
+  return setBody;
+})
 
-// Helper to handle fetch response and errors
-async function handleResponse(response: Response) : Promise<Response> {
-  return await response.json();
-}
-
-async function get(endpoint: string, authToken: string, options: RequestOptions = {}) : Promise<Response> {
+async function get(endpoint: string, authToken?: string): Promise<Response> {
   const config = {
     method: 'GET',
-    headers: {
-    ...defaultHeaders(authToken),
-    },
+    ...(authToken && { headers: setHeaders(authToken) }),
   };
 
   const response = await fetch(`${BASE_URL}${endpoint}`, config);
   return handleResponse(response);
 }
 
-async function post(endpoint: string, body: {}, options: RequestOptions = {}) {
+async function post(endpoint: string, body: {}, authToken?: string) {
   const config = {
     method: 'POST',
     headers: {
-      ...defaultHeaders,
-      ...(options.headers || {})
+      'Content-Type': 'application/json'
     },
     body: JSON.stringify(body),
-    ...options
   };
 
   const response = await fetch(`${BASE_URL}${endpoint}`, config);
   return handleResponse(response);
 }
 
-async function put(endpoint: string, body: {}, options: RequestOptions = {}) {
+async function put(endpoint: string, body: {}, authToken?: string) {
   const config = {
     method: 'PUT',
-    headers: {
-      ...defaultHeaders,
-      ...(options.headers || {})
-    },
-    body: JSON.stringify(body),
-    ...options
+    ...(authToken && { headers: setHeaders(authToken) }),
+    body: setBody,
   };
 
   const response = await fetch(`${BASE_URL}${endpoint}`, config);
   return handleResponse(response);
 }
 
-async function del(endpoint: string, options: RequestOptions = {}) {
+async function del(endpoint: string, body: {}, authToken?: string) {
   const config = {
     method: 'DELETE',
-    headers: {
-      ...defaultHeaders,
-      ...(options.headers || {})
-    },
-    ...options
+    ...(authToken && { headers: setHeaders(authToken) }),
+    body: setBody,
   };
 
   const response = await fetch(`${BASE_URL}${endpoint}`, config);
   return handleResponse(response);
+}
+
+async function handleResponse(response: Response): Promise<Response> {
+  let data = await response.json();
+
+  if (data._metaData.statusCode === 401) {
+    window.location.href = '/signin'
+  }
+  return data;
 }
 
 export const apiServices = {

@@ -1,10 +1,9 @@
 import CredentialProvider from 'next-auth/providers/credentials';
-import GithubProvider from 'next-auth/providers/github';
 import { NextAuthConfig } from 'next-auth';
+import { attemptLogin } from '@/hooks/auth/use-auth';
 
 const authConfig = {
   providers: [
-    GithubProvider({}),
     CredentialProvider({
       credentials: {
         email: {
@@ -30,6 +29,7 @@ const authConfig = {
           const response = await rawResponse.json();
           return response.data;
         } catch (error) {
+          console.error('Login error:', error);
           throw error;
         }
       }
@@ -45,11 +45,31 @@ const authConfig = {
     strategy: 'jwt'
   },
   callbacks: {
+    // async jwt( token, user ) {
+    //   return { ...token, ...user };
+    // },
+    // async session({ session, token }: { session: any; token: any; user: any }) {
+    //   session.user = token as any;
+    //   return session;
+    // }
     async jwt({ token, user }: { token: any; user: any }) {
-      return { ...token, ...user };
+      if (user) {
+        token.id = user.id;
+        token.email = user.email;
+        token.firstName = user.firstName;
+        token.lastName = user.lastName;
+        token.roles = user.roles;
+      }
+      return token;
     },
-    async session({ session, token }: { session: any; token: any; user: any }) {
-      session.user = token as any;
+    async session({ token, session }: { token: any; session: any }) {
+      session.user = {
+        id: token.id,
+        email: token.email,
+        firstName: token.firstName,
+        lastName: token.lastName,
+        roles: token.roles
+      };
       return session;
     }
   },
@@ -67,5 +87,3 @@ const authConfig = {
 } satisfies NextAuthConfig;
 
 export default authConfig;
-// https://www.youtube.com/watch?v=Jrolu1_G9FI
-// https://youtu.be/khNwrFJ-Xqs?t=3233

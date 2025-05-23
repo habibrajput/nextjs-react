@@ -40,8 +40,6 @@ import {
 } from '@/components/ui/table';
 import { redirect, usePathname } from 'next/navigation';
 import { useSession } from 'next-auth/react';
-import { usePosts } from '@/hooks/contact/usePosts';
-import { useContacts } from '@/hooks/contact/useContacts';
 
 const data: Payment[] = [
   {
@@ -329,8 +327,6 @@ export default function StepperDemo({ onCancel, onSuccess }: FormProps) {
     // },
   ];
 
-  const contacts = useContacts();
-  console.log('contacts', JSON.stringify(contacts));
   return (
     <div className='container w-full py-5'>
       <div className='flex gap-6'>

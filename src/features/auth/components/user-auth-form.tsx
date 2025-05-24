@@ -50,13 +50,14 @@ export default function UserAuthForm() {
         redirect: false
       })
         .then((data) => {
+          console.log(data)
           if (data.error === 'CredentialsSignin') {
             setSignInError('Invalid identifier or password');
           } else if (data.error) {
             setSignInError('Server Error');
           }
 
-          router.push(callbackUrl ?? '/dashboard/overview');
+          // router.push(callbackUrl ?? '/dashboard/overview');
         })
         .catch(() => {
           toast.error('Sign In Failed!');

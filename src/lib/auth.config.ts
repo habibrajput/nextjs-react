@@ -1,6 +1,6 @@
 import CredentialProvider from 'next-auth/providers/credentials';
-import { NextAuthConfig } from 'next-auth';
-import { attemptLogin } from '@/hooks/auth/use-auth';
+import { AuthValidity, CredentialsSignin, DecodedJWT, NextAuthConfig, User, UserObject } from 'next-auth';
+import { jwtDecode } from 'jwt-decode';
 
 const authConfig = {
   providers: [
@@ -27,16 +27,38 @@ const authConfig = {
           );
 
           const response = await rawResponse.json();
-          return response.data;
+
+          const token: DecodedJWT = jwtDecode(response.data.token);
+          const refreshToken: DecodedJWT = jwtDecode(response.data.refreshToken);
+
+          // Extract the user from the access token
+          const user: UserObject = {
+            id: response.id,
+            firstName: response.data.firstName,
+            lastName: response.data.lastName,
+            email: response.data.email,
+            roles: response.data.roles
+          };
+
+          // Extract the auth validity from the tokens
+          const validity: AuthValidity = {
+            validUntil: token.exp,
+            refreshUntil: refreshToken.exp
+          };
+
+          return {
+            id: refreshToken.jti,
+            user: user,
+            validity: validity
+          } as User;
         } catch (error) {
-          console.error('Login error:', error);
           throw error;
         }
       }
     })
   ],
   logger: {
-    error() {}
+    error() { }
   },
   pages: {
     signIn: '/signin'
@@ -45,31 +67,35 @@ const authConfig = {
     strategy: 'jwt'
   },
   callbacks: {
-    // async jwt( token, user ) {
-    //   return { ...token, ...user };
-    // },
-    // async session({ session, token }: { session: any; token: any; user: any }) {
-    //   session.user = token as any;
-    //   return session;
-    // }
-    async jwt({ token, user }: { token: any; user: any }) {
-      if (user) {
-        token.id = user.id;
-        token.email = user.email;
-        token.firstName = user.firstName;
-        token.lastName = user.lastName;
-        token.roles = user.roles;
+    async jwt({ token, user, account }: { token: string, user: string, account: string }) {
+      // Initial signin contains a 'User' object from authorize method
+      if (user && account) {
+        console.debug("Initial signin");
+        return { ...token, data: user };
       }
-      return token;
+
+      // The current access token is still valid
+      if (Date.now() < token.data.validity.valid_until * 1000) {
+        console.debug("Access token is still valid");
+        return token;
+      }
+
+      // The current access token has expired, but the refresh token is still valid
+      if (Date.now() < token.data.validity.refresh_until * 1000) {
+        console.debug("Access token is being refreshed");
+        return await refreshAccessToken(token);
+      }
+
+      // The current access token and refresh token have both expired
+      // This should not really happen unless you get really unlucky with
+      // the timing of the token expiration because the middleware should
+      // have caught this case before the callback is called
+      console.debug("Both tokens have expired");
+      return { ...token, error: "RefreshTokenExpired" } as JWT;
     },
-    async session({ token, session }: { token: any; session: any }) {
-      session.user = {
-        id: token.id,
-        email: token.email,
-        firstName: token.firstName,
-        lastName: token.lastName,
-        roles: token.roles
-      };
+    async session({ session, token, user }) {
+      session.user = token.data.user;
+      session.validity = token.data.validity;
       return session;
     }
   },

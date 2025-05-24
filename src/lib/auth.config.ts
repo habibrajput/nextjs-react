@@ -90,6 +90,7 @@ const authConfig = {
       // This should not really happen unless you get really unlucky with
       // the timing of the token expiration because the middleware should
       // have caught this case before the callback is called
+      // i will con...
       console.debug("Both tokens have expired");
       return { ...token, error: "RefreshTokenExpired" } as JWT;
     },

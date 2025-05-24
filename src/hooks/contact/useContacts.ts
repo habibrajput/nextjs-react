@@ -38,7 +38,7 @@ const useContacts = () => {
   const { data: session } = useSession();
 
   return useQuery({
-    queryKey: ['posts'],
+    queryKey: ['contacts'],
     queryFn: () => fetchContacts(session?.user?.token ?? ''),
     suspense: true,
   });

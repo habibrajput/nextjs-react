@@ -16,7 +16,7 @@ import {
 } from '@/components/ui/stepper';
 import { ArrowUpDown, CreditCard, Home, User } from 'lucide-react';
 import { Icons } from '@/components/icons';
-import { UploadContactsForm } from '@/features/contacts/components/add-contact/upload-contact-form';
+import { UploadContactsForm } from '@/features/contacts/components/create-and-update/upload-contact-form';
 import {
   ColumnDef,
   ColumnFiltersState,

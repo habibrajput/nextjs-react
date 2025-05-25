@@ -4,9 +4,9 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Icons } from '@/components/icons';
 import DefaultDrawer from '@/components/drawer/default-drawer';
-import { CreateContactForm } from '@/features/contacts/components/create-and-update/create-contact-form';
-import MultiStepForm from '@/features/contacts/components/create-and-update/multistep-form';
-import { isMode, Mode, modeMap } from '@/features/contacts/utils/utils';
+import { CreateContactForm } from '@/features/contacts/_components/create-and-update/create-contact-form';
+import MultiStepForm from '@/features/contacts/_components/create-and-update/multistep-form';
+import { isMode, Mode, modeMap } from '@/features/contacts/_utils/utils';
 import { OptionCard } from './option-card';
 
 export default function AddContactWrapper() {

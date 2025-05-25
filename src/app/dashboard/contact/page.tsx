@@ -3,9 +3,9 @@ import { SearchParams } from 'nuqs/server';
 import { Heading } from '@/components/ui/heading';
 import PageContainer from '@/components/layout/page-container';
 import { searchParamsCache, serialize } from '@/lib/searchparams';
-import { DataTableSkeleton } from '@/components/ui/table/data-table-skeleton';
-import ProductListingPage from '@/features/contacts/components/product-listing';
-import AddContactWrapper from '@/features/contacts/components/create-and-update/add-contact-drawer';
+import { DataTableSkeleton } from '@/components/data-table/data-table-skeleton';
+import ProductListingPage from '@/features/contacts/_components/product-listing';
+import AddContactWrapper from '@/features/contacts/_components/create-and-update/add-contact-drawer';
 
 export const metadata = {
   title: 'Dashboard: Contacts'
@@ -38,9 +38,18 @@ export default async function Page(props: pageProps) {
           key={key}
           fallback={
             <DataTableSkeleton
-              columnCount={5}
-              rowCount={10}
+              columnCount={7}
               filterCount={2}
+              cellWidths={[
+                "10rem",
+                "30rem",
+                "10rem",
+                "10rem",
+                "6rem",
+                "6rem",
+                "6rem",
+              ]}
+              shrinkZero
             />
           }
         >

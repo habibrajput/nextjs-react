@@ -4,7 +4,7 @@ import { Column, ColumnDef } from '@tanstack/react-table';
 import { DataTableColumnHeader } from '@/components/ui/table/data-table-column-header';
 import { Checkbox } from "@/components/ui/checkbox";
 import { CellAction } from './cell-action';
-import { Contact } from '../../constants/contact';
+import { Contact } from '../../_types/contact';
 
 export const getContactColumns = (groupOptions: { id: number;name: string;}[]): ColumnDef<Contact>[] => [
   {

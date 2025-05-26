@@ -15,7 +15,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 // import { deleteTasks, updateTasks } from "../_lib/actions";
 import { DataTableActionBar, DataTableActionBarAction, DataTableActionBarSelection } from "@/components/data-table/data-table-action-bar";
-import { Contact } from "../../_types/contact";
+import { Contact } from "../_types/contact";
 
 const actions = [
     "update-status",

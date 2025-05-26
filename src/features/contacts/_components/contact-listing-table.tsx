@@ -1,8 +1,8 @@
 'use client';
 
+import { useContacts } from '../_hooks/use-contacts';
 import { useGroups } from '../_hooks/use-groups';
 import { ProductTable } from './table';
-import { useContacts } from "@/hooks/contact/useContacts";
 import { getContactColumns } from './table/columns';
 
 export default function ContactTableWrapper() {

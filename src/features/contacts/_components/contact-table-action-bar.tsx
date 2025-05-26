@@ -30,7 +30,7 @@ interface ContactTableActionBarProps {
     table: Table<Contact>;
 }
 
-export function TasksTableActionBar({ table }: ContactTableActionBarProps) {
+export function ContactsTableActionBar({ table }: ContactTableActionBarProps) {
     const rows = table.getFilteredSelectedRowModel().rows;
     const [isPending, startTransition] = React.useTransition();
     const [currentAction, setCurrentAction] = React.useState<Action | null>(null);

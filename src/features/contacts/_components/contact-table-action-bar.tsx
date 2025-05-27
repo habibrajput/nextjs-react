@@ -101,7 +101,7 @@ export function ContactsTableActionBar({ table }: ContactTableActionBarProps) {
             />
             <div className="flex items-center gap-1.5">
                 <Select
-                    onValueChange={(value: Task["status"]) =>
+                    onValueChange={(value: Contact["status"]) =>
                         onTaskUpdate({ field: "status", value })
                     }
                 >
@@ -125,7 +125,7 @@ export function ContactsTableActionBar({ table }: ContactTableActionBarProps) {
                     </SelectContent>
                 </Select>
                 <Select
-                    onValueChange={(value: Task["priority"]) =>
+                    onValueChange={(value: Contact["priority"]) =>
                         onTaskUpdate({ field: "priority", value })
                     }
                 >

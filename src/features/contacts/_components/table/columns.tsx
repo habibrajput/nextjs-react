@@ -1,5 +1,3 @@
-// columns.tsx
-
 import { Column, ColumnDef } from '@tanstack/react-table';
 import { DataTableColumnHeader } from '@/components/ui/table/data-table-column-header';
 import { Checkbox } from "@/components/ui/checkbox";
@@ -76,8 +74,27 @@ export const getContactColumns = (groupOptions: { id: number;name: string;}[]): 
     },
   },
   {
-    accessorKey: 'email',
-    header: 'Email'
+    id: "email",
+    accessorKey: "email",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Email" />
+    ),
+    cell: ({ row }) => {
+
+      return (
+        <div className="flex items-center gap-2">
+          <span className="max-w-[31.25rem] truncate font-medium">
+              {row.getValue("email")}
+            </span>
+        </div>
+      );
+    },
+    meta: {
+      label: "Email",
+      placeholder: "Search email...",
+      variant: "text",
+    },
+    enableColumnFilter: true,
   },
   {
     accessorKey: "smsPhoneNumber",

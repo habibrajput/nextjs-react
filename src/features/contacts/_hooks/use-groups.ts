@@ -16,7 +16,6 @@ const useGroups = () => {
     return useQuery({
         queryKey: ['groups'],
         queryFn: () => fetchGroups(session?.user?.token ?? ''),
-        suspense: true,
     });
 };
 

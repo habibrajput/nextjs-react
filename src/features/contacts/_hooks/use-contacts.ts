@@ -17,7 +17,6 @@ const useContacts = () => {
     queryKey: ['posts'],
     queryFn: () => fetchContacts(session?.user?.token ?? ''),
     enabled: false,
-    suspense: true,
   });
 };
 

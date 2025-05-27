@@ -8,7 +8,7 @@ import { useDataTable } from '@/hooks/use-data-table';
 import { ContactsTableActionBar } from './contact-table-action-bar';
 import { useContacts } from '../_hooks/use-contacts';
 import { Contact } from '@/features/contacts/_types/contact';
-import { getContactsTableColumns } from '@/features/contacts/_components/tasks-table-columns';
+import { getContactsTableColumns } from '@/features/contacts/_components/contacts-table-columns';
 import { useGroups } from '@/features/contacts/_hooks/use-groups';
 import { DataTableToolbar } from '@/components/ui/table/data-table-toolbar';
 import { DataTableSortList } from '@/components/data-table/data-table-sort-list';

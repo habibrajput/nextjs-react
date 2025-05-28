@@ -24,7 +24,7 @@ import { formatDate } from '@/lib/format';
 import { Contact } from '@/features/contacts/_types/contact';
 
 interface GetContactsTableColumnsProps {
-  // estimatedHoursRange: { min: number; max: number };
+
   groupOptions: { id: number; name: string }[];
   setRowAction: React.Dispatch<
     React.SetStateAction<DataTableRowAction<Contact> | null>
@@ -75,8 +75,6 @@ export function getContactsTableColumns({
       },
       meta: {
         label: 'Full Name',
-        placeholder: 'Search full name...',
-        variant: 'text'
       },
       enableColumnFilter: true
     },
@@ -103,7 +101,7 @@ export function getContactsTableColumns({
       enableColumnFilter: true
     },
     {
-      id: 'Groups',
+      id: 'groups',
       accessorKey: 'groups',
       header: ({ column }: { column: Column<Contact, unknown> }) => (
         <DataTableColumnHeader column={column} title='Groups' />

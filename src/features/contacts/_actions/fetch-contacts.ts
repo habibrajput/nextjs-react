@@ -1,7 +1,8 @@
+import { toStringQueryParams } from '@/lib/helpers';
 import { commonApiServices } from '@/services/commonApiServices';
 
-const getContacts = async (parms: any) => {
-  return await commonApiServices.get('/contacts?' + parms);
+const getContacts = async (queryParm: object) => {
+  return await commonApiServices.get('/contacts?' + toStringQueryParams(queryParm));
 };
 
 const getGroups = async () => {

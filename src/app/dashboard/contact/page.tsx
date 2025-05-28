@@ -2,13 +2,13 @@ import { Suspense } from 'react';
 import { SearchParams } from 'nuqs/server';
 import { Heading } from '@/components/ui/heading';
 import PageContainer from '@/components/layout/page-container';
-import { searchParamsCache, serialize } from '@/lib/searchparams';
+import { searchParamsCache } from '@/lib/searchparams';
 import { DataTableSkeleton } from '@/components/data-table/data-table-skeleton';
 import AddContactWrapper from '@/features/contacts/_components/create-and-update/add-contact-drawer';
 import { ContactsTable } from '@/features/contacts/_components/contact-table';
 import { FeatureFlagsProvider } from '@/features/contacts/_components/feature-flags-provider';
 import { getContacts, getGroups } from '@/features/contacts/_actions/fetch-contacts';
-
+import { ContactsErrorBoundary } from '@/features/contacts/_components/contacts-error-boundary';
 export const metadata = {
   title: 'Dashboard: Contacts'
 };
@@ -18,18 +18,9 @@ type pageProps = {
 };
 
 export default async function Page(props: pageProps) {
-  // const searchParams = await props.searchParams;
-  // // Allow nested RSCs to access the search params (in a type-safe way)
-  // searchParamsCache.parse(searchParams);
-  //
-  // // This key is used for invoke suspense if any of the search params changed (used for filters)
-
 
   const searchParams = await props.searchParams;
   const search = searchParamsCache.parse(searchParams);
-  const key = serialize({ ...searchParams });
-
-  // const validFilters = getValidFilters(search);
 
   const promises = Promise.all([
     getContacts({
@@ -48,28 +39,30 @@ export default async function Page(props: pageProps) {
           />
           <AddContactWrapper />
         </div>
+        
         <FeatureFlagsProvider>
-        <Suspense
-          key={key}
-          fallback={
-            <DataTableSkeleton
-              columnCount={10}
-              filterCount={4}
-              cellWidths={[
-                "10rem",
-                "10rem",
-                "10rem",
-                "10rem",
-                "6rem",
-                "6rem",
-                "6rem",
-              ]}
-              shrinkZero
-            />
-          }
-        >
-          <ContactsTable promises={ promises } />
-        </Suspense>
+          {/* <ContactsErrorBoundary> */}
+            <Suspense
+              fallback={
+                <DataTableSkeleton
+                  columnCount={10}
+                  filterCount={4}
+                  cellWidths={[
+                    "10rem",
+                    "10rem",
+                    "10rem",
+                    "10rem",
+                    "6rem",
+                    "6rem",
+                    "6rem",
+                  ]}
+                  shrinkZero
+                />
+              }
+            >
+              <ContactsTable promises={promises} />
+            </Suspense>
+          {/* </ContactsErrorBoundary> */}
         </FeatureFlagsProvider>
       </div>
     </PageContainer>

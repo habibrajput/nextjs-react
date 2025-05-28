@@ -6,7 +6,6 @@ import * as React from 'react';
 import { DataTable } from '@/components/data-table/data-table';
 import { useDataTable } from '@/hooks/use-data-table';
 import { ContactsTableActionBar } from './contact-table-action-bar';
-import { useContacts } from '../_hooks/use-contacts';
 import { Contact } from '@/features/contacts/_types/contact';
 import { getContactsTableColumns } from '@/features/contacts/_components/contacts-table-columns';
 import { useGroups } from '@/features/contacts/_hooks/use-groups';
@@ -17,7 +16,7 @@ import { DataTableAdvancedToolbar } from '@/components/data-table/data-table-adv
 import { DataTableFilterList } from '@/components/data-table/data-table-filter-list';
 import { DataTableFilterMenu } from '@/components/data-table/data-table-filter-menu';
 
-export function ContactsTable() {
+export function ContactsTable({ promises }: any) {
   const { enableAdvancedFilter, filterFlag } = useFeatureFlags();
   const { data: groupsData = [] } = useGroups();
 
@@ -32,25 +31,24 @@ export function ContactsTable() {
     name: group.name
   }));
 
-  // Using the custom hook
-  const contacts = useContacts();
-
+  const [contacts,groups] = React.use(promises);
   const [rowAction, setRowAction] =
     React.useState<DataTableRowAction<Contact> | null>(null);
 
   const columns = React.useMemo(
     () =>
       getContactsTableColumns({
-        // estimatedHoursRange,
         groupOptions,
         setRowAction
       }),
     []
   );
 
+  const pageCount = contacts.data.meta.totalPages;
   const { table, shallow, debounceMs, throttleMs } = useDataTable({
-    data: contacts.data.data.items,
+    data: contacts.data.items,
     columns,
+    pageCount,
     enableAdvancedFilter,
 
     initialState: {
@@ -68,35 +66,31 @@ export function ContactsTable() {
         table={table}
         actionBar={<ContactsTableActionBar table={table} />}
       >
-        {enableAdvancedFilter ?
-          (
-            <DataTableAdvancedToolbar table={table}>
-              <DataTableSortList table={table} align="start" />
-              {filterFlag === "advancedFilters" ? (
-                <DataTableFilterList
-                  table={table}
-                  shallow={shallow}
-                  debounceMs={debounceMs}
-                  throttleMs={throttleMs}
-                  align="start"
-                />
-              ) : (
-                <DataTableFilterMenu
-                  table={table}
-                  shallow={shallow}
-                  debounceMs={debounceMs}
-                  throttleMs={throttleMs}
-                />
-              )}
-            </DataTableAdvancedToolbar>
-          )
-          :
-          (
-            <DataTableToolbar table={table}>
-              <DataTableSortList table={table} align='end' />
-            </DataTableToolbar>
-          )
-        }
+        {enableAdvancedFilter ? (
+          <DataTableAdvancedToolbar table={table}>
+            <DataTableSortList table={table} align='start' />
+            {filterFlag === 'advancedFilters' ? (
+              <DataTableFilterList
+                table={table}
+                shallow={shallow}
+                debounceMs={debounceMs}
+                throttleMs={throttleMs}
+                align='start'
+              />
+            ) : (
+              <DataTableFilterMenu
+                table={table}
+                shallow={shallow}
+                debounceMs={debounceMs}
+                throttleMs={throttleMs}
+              />
+            )}
+          </DataTableAdvancedToolbar>
+        ) : (
+          <DataTableToolbar table={table}>
+            <DataTableSortList table={table} align='end' />
+          </DataTableToolbar>
+        )}
       </DataTable>
     </>
   );

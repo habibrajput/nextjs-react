@@ -2,11 +2,10 @@
 
 import type { DataTableRowAction } from '@/types/data-table';
 import { Column, ColumnDef } from '@tanstack/react-table';
-import { CalendarIcon, CircleDashed, Ellipsis, Text } from 'lucide-react';
+import { CalendarIcon, Ellipsis } from 'lucide-react';
 import * as React from 'react';
 
 import { DataTableColumnHeader } from '@/components/data-table/data-table-column-header';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
@@ -26,14 +25,13 @@ import { Contact } from '@/features/contacts/_types/contact';
 
 interface GetContactsTableColumnsProps {
   // estimatedHoursRange: { min: number; max: number };
-  groupOptions: { id: string; name: string }[];
+  groupOptions: { id: number; name: string }[];
   setRowAction: React.Dispatch<
     React.SetStateAction<DataTableRowAction<Contact> | null>
   >;
 }
 
 export function getContactsTableColumns({
-  // estimatedHoursRange,
   groupOptions,
   setRowAction
 }: GetContactsTableColumnsProps): ColumnDef<Contact>[] {
@@ -64,7 +62,7 @@ export function getContactsTableColumns({
       size: 40
     },
     {
-      id: 'Full Name',
+      id: 'full_name',
       header: 'Full Name',
       accessorFn: (row) => `${row.firstName} ${row.lastName}`,
       cell: ({ row }) => {
@@ -75,48 +73,52 @@ export function getContactsTableColumns({
           </span>
         );
       },
+      meta: {
+        label: 'Full Name',
+        placeholder: 'Search full name...',
+        variant: 'text'
+      },
       enableColumnFilter: true
     },
     {
-      id: "email",
-      accessorKey: "email",
+      id: 'email',
+      accessorKey: 'email',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Email" />
+        <DataTableColumnHeader column={column} title='Email' />
       ),
       cell: ({ row }) => {
-
         return (
-          <div className="flex items-center gap-2">
-          <span className="max-w-[31.25rem] truncate font-medium">
-              {row.getValue("email")}
+          <div className='flex items-center gap-2'>
+            <span className='max-w-[31.25rem] truncate font-medium'>
+              {row.getValue('email')}
             </span>
           </div>
         );
       },
       meta: {
-        label: "Email",
-        placeholder: "Search email...",
-        variant: "text",
+        label: 'Email',
+        placeholder: 'Search email...',
+        variant: 'text'
       },
-      enableColumnFilter: true,
+      enableColumnFilter: true
     },
     {
       id: 'Groups',
       accessorKey: 'groups',
       header: ({ column }: { column: Column<Contact, unknown> }) => (
-        <DataTableColumnHeader column={column} title="Groups" />
+        <DataTableColumnHeader column={column} title='Groups' />
       ),
       cell: ({ cell }) => {
         const groups = cell.getValue<Contact['group']>();
         if (!Array.isArray(groups)) return null;
 
         return (
-          <div className="flex flex-wrap gap-1">
+          <div className='flex flex-wrap gap-1'>
             {groups.map((group) => (
               <div className='flex flex-nowrap' key={group.id}>
-              <span className="px-2 py-1 text-xs bg-gray-200 rounded-md text-gray-800">
-                {group.name}
-              </span>
+                <span className='rounded-md bg-gray-200 px-2 py-1 text-xs text-gray-800'>
+                  {group.name}
+                </span>
               </div>
             ))}
           </div>
@@ -126,19 +128,25 @@ export function getContactsTableColumns({
       meta: {
         label: 'Groups',
         variant: 'multiSelect',
-        options: groupOptions.map(group => ({
+        options: groupOptions.map((group) => ({
           label: group.name,
           value: group.name
-        })),
-      },
+        }))
+      }
     },
     {
-      accessorKey: "smsPhoneNumber",
-      header: 'SMS Phone'
+      accessorKey: 'smsPhoneNumber',
+      header: 'SMS Phone',
+      meta: {
+        label: 'SMS Phone',
+      }
     },
     {
-      accessorKey: "whatsAppPhoneNumber",
-      header: "What's app Phone"
+      accessorKey: 'whatsAppPhoneNumber',
+      header: "What's app Phone",
+      meta: {
+        label: 'Whats app Phone',
+      }
     },
     // {
     //   id: 'groups',

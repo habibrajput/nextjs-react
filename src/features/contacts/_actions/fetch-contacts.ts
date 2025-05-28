@@ -1,9 +1,11 @@
-import { apiServices } from '@/services/apiServices';
+import { commonApiServices } from '@/services/commonApiServices';
 
-const fetchContacts = async (
-    authToken: string
-) => {
-    return await apiServices.get('/contacts', authToken);
+const getContacts = async (parms: any) => {
+  return await commonApiServices.get('/contacts?' + parms);
 };
 
-export { fetchContacts };
+const getGroups = async () => {
+  return await commonApiServices.get('/groups/get-all-group-names');
+};
+
+export { getContacts, getGroups };

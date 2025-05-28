@@ -12,8 +12,13 @@ import { getContactsTableColumns } from '@/features/contacts/_components/contact
 import { useGroups } from '@/features/contacts/_hooks/use-groups';
 import { DataTableToolbar } from '@/components/ui/table/data-table-toolbar';
 import { DataTableSortList } from '@/components/data-table/data-table-sort-list';
+import { useFeatureFlags } from './feature-flags-provider';
+import { DataTableAdvancedToolbar } from '@/components/data-table/data-table-advanced-toolbar';
+import { DataTableFilterList } from '@/components/data-table/data-table-filter-list';
+import { DataTableFilterMenu } from '@/components/data-table/data-table-filter-menu';
 
 export function ContactsTable() {
+  const { enableAdvancedFilter, filterFlag } = useFeatureFlags();
   const { data: groupsData = [] } = useGroups();
 
   const typedGroupsData = (
@@ -27,7 +32,6 @@ export function ContactsTable() {
     name: group.name
   }));
 
-  const { enableAdvancedFilter, filterFlag } = useFeatureFlags();
   // Using the custom hook
   const contacts = useContacts();
 
@@ -64,41 +68,36 @@ export function ContactsTable() {
         table={table}
         actionBar={<ContactsTableActionBar table={table} />}
       >
-        {enableAdvancedFilter ? (
-          <DataTableToolbar table={table}>
-            <DataTableSortList table={table} align='end' />
-          </DataTableToolbar>
-        ) : // <DataTableAdvancedToolbar table={table}>
-        //   <DataTableSortList table={table} align="start" />
-        //   {filterFlag === "advancedFilters" ? (
-        //     <DataTableFilterList
-        //       table={table}
-        //       shallow={shallow}
-        //       debounceMs={debounceMs}
-        //       throttleMs={throttleMs}
-        //       align="start"
-        //     />
-        //   ) : (
-        //     <DataTableFilterMenu
-        //       table={table}
-        //       shallow={shallow}
-        //       debounceMs={debounceMs}
-        //       throttleMs={throttleMs}
-        //     />
-        //   )}
-        // </DataTableAdvancedToolbar>
-        null}
+        {enableAdvancedFilter ?
+          (
+            <DataTableAdvancedToolbar table={table}>
+              <DataTableSortList table={table} align="start" />
+              {filterFlag === "advancedFilters" ? (
+                <DataTableFilterList
+                  table={table}
+                  shallow={shallow}
+                  debounceMs={debounceMs}
+                  throttleMs={throttleMs}
+                  align="start"
+                />
+              ) : (
+                <DataTableFilterMenu
+                  table={table}
+                  shallow={shallow}
+                  debounceMs={debounceMs}
+                  throttleMs={throttleMs}
+                />
+              )}
+            </DataTableAdvancedToolbar>
+          )
+          :
+          (
+            <DataTableToolbar table={table}>
+              <DataTableSortList table={table} align='end' />
+            </DataTableToolbar>
+          )
+        }
       </DataTable>
     </>
   );
-}
-
-function useFeatureFlags(): {
-  enableAdvancedFilter: boolean;
-  filterFlag: boolean;
-} {
-  return {
-    enableAdvancedFilter: true, // Toggle advanced filter functionality
-    filterFlag: false // Example of another flag
-  };
 }

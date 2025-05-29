@@ -128,7 +128,7 @@ export function getContactsTableColumns({
         variant: 'multiSelect',
         options: groupOptions.map((group) => ({
           label: group.name,
-          value: group.name
+          value: group.id
         }))
       }
     },

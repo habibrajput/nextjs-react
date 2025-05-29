@@ -2,6 +2,7 @@
 
 import type { DataTableRowAction } from '@/types/data-table';
 import * as React from 'react';
+import { use } from 'react';
 
 import { DataTable } from '@/components/data-table/data-table';
 import { useDataTable } from '@/hooks/use-data-table';
@@ -31,7 +32,7 @@ export function ContactsTable({ promises }: any) {
     name: group.name
   }));
 
-  const [contacts,groups] = React.use(promises);
+  const [contacts, groups] = use(promises);
   const [rowAction, setRowAction] =
     React.useState<DataTableRowAction<Contact> | null>(null);
 

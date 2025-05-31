@@ -8,7 +8,7 @@ import AddContactWrapper from '@/features/contacts/_components/create-and-update
 import { ContactsTable } from '@/features/contacts/_components/contact-table';
 import { FeatureFlagsProvider } from '@/features/contacts/_components/feature-flags-provider';
 import { getContacts, getGroups } from '@/features/contacts/_actions/fetch-contacts';
-import { ContactsErrorBoundary } from '@/features/contacts/_components/contacts-error-boundary';
+import ErrorBoundaryWrapper from '@/features/contacts/_components/ErrorBoundaryWrapper';
 export const metadata = {
   title: 'Dashboard: Contacts'
 };
@@ -30,7 +30,7 @@ export default async function Page(props: pageProps) {
   ]);
 
   return (
-    <PageContainer scrollable={false}>
+    <PageContainer scrollable={true}>
       <div className='flex flex-1 flex-col space-y-4'>
         <div className='flex items-start justify-between'>
           <Heading
@@ -39,9 +39,9 @@ export default async function Page(props: pageProps) {
           />
           <AddContactWrapper />
         </div>
-        
+
         <FeatureFlagsProvider>
-          {/* <ContactsErrorBoundary> */}
+          <ErrorBoundaryWrapper>
             <Suspense
               fallback={
                 <DataTableSkeleton
@@ -62,7 +62,7 @@ export default async function Page(props: pageProps) {
             >
               <ContactsTable promises={promises} />
             </Suspense>
-          {/* </ContactsErrorBoundary> */}
+          </ErrorBoundaryWrapper>
         </FeatureFlagsProvider>
       </div>
     </PageContainer>

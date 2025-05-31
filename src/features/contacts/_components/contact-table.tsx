@@ -63,36 +63,38 @@ export function ContactsTable({ promises }: any) {
 
   return (
     <>
-      <DataTable
-        table={table}
-        actionBar={<ContactsTableActionBar table={table} />}
-      >
-        {enableAdvancedFilter ? (
-          <DataTableAdvancedToolbar table={table}>
-            <DataTableSortList table={table} align='start' />
-            {filterFlag === 'advancedFilters' ? (
-              <DataTableFilterList
-                table={table}
-                shallow={shallow}
-                debounceMs={debounceMs}
-                throttleMs={throttleMs}
-                align='start'
-              />
-            ) : (
-              <DataTableFilterMenu
-                table={table}
-                shallow={shallow}
-                debounceMs={debounceMs}
-                throttleMs={throttleMs}
-              />
-            )}
-          </DataTableAdvancedToolbar>
-        ) : (
-          <DataTableToolbar table={table}>
-            <DataTableSortList table={table} align='end' />
-          </DataTableToolbar>
-        )}
-      </DataTable>
+      {/* <ContactsErrorBoundary> */}
+        <DataTable
+          table={table}
+          actionBar={<ContactsTableActionBar table={table} />}
+        >
+          {enableAdvancedFilter ? (
+            <DataTableAdvancedToolbar table={table}>
+              <DataTableSortList table={table} align='start' />
+              {filterFlag === 'advancedFilters' ? (
+                <DataTableFilterList
+                  table={table}
+                  shallow={shallow}
+                  debounceMs={debounceMs}
+                  throttleMs={throttleMs}
+                  align='start'
+                />
+              ) : (
+                <DataTableFilterMenu
+                  table={table}
+                  shallow={shallow}
+                  debounceMs={debounceMs}
+                  throttleMs={throttleMs}
+                />
+              )}
+            </DataTableAdvancedToolbar>
+          ) : (
+            <DataTableToolbar table={table}>
+              <DataTableSortList table={table} align='end' />
+            </DataTableToolbar>
+          )}
+        </DataTable>
+      {/* </ContactsErrorBoundary> */}
     </>
   );
 }

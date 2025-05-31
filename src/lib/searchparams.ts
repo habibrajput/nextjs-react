@@ -11,6 +11,7 @@ export const searchParams = {
   page: parseAsInteger.withDefault(1),
   perPage: parseAsInteger.withDefault(10),
   name: parseAsString,
+  groups: parseAsString,
   email: parseAsString,
   gender: parseAsString,
   category: parseAsString,

@@ -51,6 +51,7 @@ export default function UserAuthForm() {
       redirect:false
     })
       .then((data) => {
+        console.log('Sign In Data:', data);
         if (data.error === 'CredentialsSignin') {
           setSignInError(data.code);
         }else{

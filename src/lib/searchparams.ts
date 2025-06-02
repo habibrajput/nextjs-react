@@ -10,12 +10,11 @@ import { getFiltersStateParser } from './parsers';
 export const searchParams = {
   page: parseAsInteger.withDefault(1),
   perPage: parseAsInteger.withDefault(10),
-  name: parseAsString,
-  groups: parseAsString,
-  email: parseAsString,
-  gender: parseAsString,
-  category: parseAsString,
+  name: parseAsString.withDefault(''),
+  groups: parseAsString.withDefault(''),
+  email: parseAsString.withDefault(''),
   filters: getFiltersStateParser().withDefault([]),
+  createdAt: parseAsString.withDefault(''),
   joinOperator: parseAsStringEnum(['and', 'or']).withDefault('and')
 };
 

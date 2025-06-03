@@ -11,7 +11,7 @@ import { OptionCard } from './option-card';
 
 export default function AddContactWrapper() {
   const [isOpen, setIsOpen] = useState(false);
-  const [width,setWidth] = useState(600);
+  const [width, setWidth] = useState(600);
   const [mode, setMode] = useState<Mode>('select');
   const { title, description } = modeMap[mode];
   const isCreate = isMode(mode, 'create');
@@ -35,9 +35,14 @@ export default function AddContactWrapper() {
 
   return (
     <>
-      <Button onClick={openDrawer}>
-        <Icons.iconPlus className='mr-2 h-4 w-4' /> Add New
-      </Button>
+      <div className='flex items-center justify-between gap-3'>
+        <Button variant='outline' onClick={openDrawer}>
+          <Icons.download className='mr-2 h-4 w-4' /> Import
+        </Button>
+        <Button onClick={openDrawer}>
+          <Icons.iconPlus className='mr-2 h-4 w-4' /> Add New
+        </Button>
+      </div>
       <DefaultDrawer
         open={isOpen}
         width={width}

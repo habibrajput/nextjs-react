@@ -9,6 +9,7 @@ import { ContactsTable } from '@/features/contacts/_components/contact-table';
 import { FeatureFlagsProvider } from '@/features/contacts/_components/feature-flags-provider';
 import { getContacts, getGroups } from '@/features/contacts/_actions/fetch-contacts';
 import ErrorBoundaryWrapper from '@/features/contacts/_components/ErrorBoundaryWrapper';
+import { ContactOverviewCards } from '@/features/contacts/_components/contact-overview/overview';
 export const metadata = {
   title: 'Dashboard: Contacts'
 };
@@ -33,15 +34,17 @@ export default async function Page(props: pageProps) {
   console.log('Search Params:', key);
 
   return (
-    <PageContainer scrollable={false}>
+    <PageContainer scrollable={true}>
       <div className='flex flex-1 flex-col space-y-4'>
         <div className='flex items-start justify-between'>
           <Heading
-            title='Customers'
-            description='Manage customers (Server side table functionalities.)'
+            title='Contacts'
+            description='Manage contacts (Server side table functionalities.)'
           />
           <AddContactWrapper />
         </div>
+
+        <ContactOverviewCards />
 
         <FeatureFlagsProvider>
           <ErrorBoundaryWrapper>

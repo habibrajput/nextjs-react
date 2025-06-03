@@ -42,7 +42,9 @@ import {
   CloudUpload,
   Contact,
   LocateFixed,
-  Group
+  Group,
+  Import,
+  Download
 } from 'lucide-react';
 
 export type Icon = React.ComponentType<IconProps>;
@@ -89,5 +91,7 @@ export const Icons = {
   cloudUpload: CloudUpload,
   contact: Contact,
   locateFixed: LocateFixed,
-  group: Group
+  group: Group,
+  import: Import,
+  download: Download
 };

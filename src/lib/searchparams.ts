@@ -13,6 +13,7 @@ export const searchParams = {
   name: parseAsString.withDefault(''),
   groups: parseAsString.withDefault(''),
   email: parseAsString.withDefault(''),
+  sort: parseAsString.withDefault(''),
   filters: getFiltersStateParser().withDefault([]),
   createdAt: parseAsString.withDefault(''),
   joinOperator: parseAsStringEnum(['and', 'or']).withDefault('and')

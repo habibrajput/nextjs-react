@@ -9,7 +9,7 @@ const fetchContactOverData = (): Promise<any> => {
                 [
                     {
                         title: 'Total Customers',
-                        description: 'Number of customers in the system',
+                        description: 'Number of customers',
                         icon: Icons.iconTrendingUp,
                         value: '1,250',
                     },

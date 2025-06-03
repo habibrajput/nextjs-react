@@ -31,8 +31,6 @@ export default async function Page(props: pageProps) {
     getGroups()
   ]);
 
-  console.log('Search Params:', key);
-
   return (
     <PageContainer scrollable={true}>
       <div className='flex flex-1 flex-col space-y-4'>

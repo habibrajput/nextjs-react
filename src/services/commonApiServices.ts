@@ -32,7 +32,6 @@ export class CommonApiServices {
       }
     );
     const responseData = await response.json();
-    console.log('GET Response:', responseData);
     return responseData;
     //return this.handleResponse(response);
   }

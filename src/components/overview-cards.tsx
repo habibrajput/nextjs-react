@@ -53,9 +53,8 @@ export function OverviewCardsLoading() {
       {[...Array(4)].map((i,w) => {
         return (
           <div key={w} className="space-y-3 border-1 p-3 rounded-xl">
-            <Skeleton className="h-[16.5px] w-[280px]" />
-            <Skeleton className="h-[16.5px] w-[250px]" />
-            <Skeleton className="h-[16.5px] w-[200px]" />
+            <Skeleton className="h-[21px] w-[280px]" />
+            <Skeleton className="h-[21px] w-[250px]" />
           </div>
         )
       })}

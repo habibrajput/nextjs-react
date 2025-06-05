@@ -49,10 +49,17 @@ interface DataTableSortListProps<TData>
   table: Table<TData>;
 }
 
+export interface ExtendedColumnSort<TData = unknown> {
+  order?: 'asc' | 'desc';
+  sort?: string;
+  desc: boolean;
+  id: string;
+}
+
 export function DataTableSortList<TData>({
-                                           table,
-                                           ...props
-                                         }: DataTableSortListProps<TData>) {
+  table,
+  ...props
+}: DataTableSortListProps<TData>) {
   const id = React.useId();
   const labelId = React.useId();
   const descriptionId = React.useId();
@@ -88,32 +95,54 @@ export function DataTableSortList<TData>({
     const firstColumn = columns[0];
     if (!firstColumn) return;
 
-    onSortingChange((prevSorting) => [
-      ...prevSorting,
-      { id: firstColumn.id, desc: false },
-    ]);
+    onSortingChange((prevSorting: ExtendedColumnSort<TData>[]) => {
+
+      //Append new sort.
+      const newSort: ExtendedColumnSort = {
+        id: firstColumn.id,
+        desc: false,
+        order: 'asc'
+      };
+
+      return [...extentPreviousSort(prevSorting), newSort];
+    });
   }, [columns, onSortingChange]);
 
   const onSortUpdate = React.useCallback(
     (sortId: string, updates: Partial<ColumnSort>) => {
-      onSortingChange((prevSorting) => {
-        if (!prevSorting) return prevSorting;
+      onSortingChange((prevSorting: ExtendedColumnSort<TData>[]) => {
+
+        // Ensure that the updates include the 'desc' property.
+        const order = updates.desc ? "desc" : "asc";
+
         return prevSorting.map((sort) =>
-          sort.id === sortId ? { ...sort, ...updates } : sort,
+          sort.id === sortId ? { ...sort, ...updates, order } : { ...sort, order }
         );
+      });
+    },
+    [onSortingChange]
+  );
+
+  const onSortRemove = React.useCallback(
+    (sortId: string) => {
+      onSortingChange((prevSorting) => {
+        // Remove the current sort by filtering it out.
+        const filteredSort = prevSorting.filter((item) => item.id !== sortId);
+        return extentPreviousSort(filteredSort);
       });
     },
     [onSortingChange],
   );
 
-  const onSortRemove = React.useCallback(
-    (sortId: string) => {
-      onSortingChange((prevSorting) =>
-        prevSorting.filter((item) => item.id !== sortId),
-      );
-    },
-    [onSortingChange],
-  );
+  const extentPreviousSort = ((previousSort: ExtendedColumnSort<TData>[]) => {
+    return previousSort.map((sort) => {
+      return {
+        id: sort.id,
+        desc: sort.desc,
+        order: sort.order ?? (sort.desc ? 'desc' : 'asc'),
+      };
+    });
+  });
 
   const onSortingReset = React.useCallback(
     () => onSortingChange(table.initialState.sorting),
@@ -274,13 +303,13 @@ interface DataTableSortItemProps {
 }
 
 function DataTableSortItem({
-                             sort,
-                             sortItemId,
-                             columns,
-                             columnLabels,
-                             onSortUpdate,
-                             onSortRemove,
-                           }: DataTableSortItemProps) {
+  sort,
+  sortItemId,
+  columns,
+  columnLabels,
+  onSortUpdate,
+  onSortRemove,
+}: DataTableSortItemProps) {
   const fieldListboxId = `${sortItemId}-field-listbox`;
   const fieldTriggerId = `${sortItemId}-field-trigger`;
   const directionListboxId = `${sortItemId}-direction-listbox`;

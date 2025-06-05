@@ -1,4 +1,5 @@
 import { auth } from '@/lib/auth';
+import { redirect } from 'next/navigation';
 
 export class CommonApiServices {
   private async getToken() {
@@ -13,11 +14,14 @@ export class CommonApiServices {
   }
 
   private async handleResponse(response: Response) {
-    if (!response.ok) {
-      const error = await response.json().catch(() => ({}));
-      throw new Error(error?.message || 'API request failed');
+    const responseData = await response.json();
+ 
+    //import { useEffect } from 'react';router.push('/signin'); for client-side navigation
+    if (responseData._metaData.statusCode === 401) {
+      redirect('/signin');
     }
-    return response.json();
+
+    return responseData;
   }
 
   async get(path: string) {
@@ -31,9 +35,8 @@ export class CommonApiServices {
         }
       }
     );
-    const responseData = await response.json();
-    return responseData;
-    //return this.handleResponse(response);
+    // const responseData = await response.json();
+    return this.handleResponse(response);
   }
 }
 

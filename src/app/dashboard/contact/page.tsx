@@ -8,7 +8,7 @@ import AddContactWrapper from '@/features/contacts/_components/create-and-update
 import { ContactsTable } from '@/features/contacts/_components/contact-table';
 import { FeatureFlagsProvider } from '@/features/contacts/_components/feature-flags-provider';
 import { getContacts, getGroups } from '@/features/contacts/_actions/fetch-contacts';
-import ErrorBoundaryWrapper from '@/features/contacts/_components/ErrorBoundaryWrapper';
+import ErrorBoundaryWrapper from '@/features/contacts/_components/error-boundary/contact-table-error-boundary';
 import { ContactOverviewCards } from '@/features/contacts/_components/contact-overview/overview';
 export const metadata = {
   title: 'Dashboard: Contacts'

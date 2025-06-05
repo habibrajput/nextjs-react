@@ -2,7 +2,9 @@
 
 import type { DataTableRowAction } from '@/types/data-table';
 import { Column, ColumnDef } from '@tanstack/react-table';
-import { CalendarIcon, Ellipsis } from 'lucide-react';
+import {
+  CalendarIcon, Ellipsis, Check, Copy
+} from 'lucide-react';
 import * as React from 'react';
 
 import { DataTableColumnHeader } from '@/components/data-table/data-table-column-header';
@@ -22,6 +24,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { formatDate } from '@/lib/format';
 import { Contact } from '@/features/contacts/_types/contact';
+
 
 interface GetContactsTableColumnsProps {
 

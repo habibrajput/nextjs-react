@@ -86,14 +86,39 @@ export const getFiltersStateParser = <TData>(
       }
     },
     serialize: (value) => JSON.stringify(value),
-    eq: (a, b) =>
-      a.length === b.length &&
-      a.every(
-        (filter, index) =>
-          filter.id === b[index]?.id &&
-          filter.value === b[index]?.value &&
-          filter.variant === b[index]?.variant &&
-          filter.operator === b[index]?.operator
-      )
   });
+};
+
+
+export const getSortStateParser = <TData>(
+  columnIds?: string[] | Set<string>
+) => {
+  const validKeys = columnIds
+    ? columnIds instanceof Set
+      ? columnIds
+      : new Set(columnIds)
+    : null;
+
+  return createParser({
+    parse: (value) => {
+      try {
+        const parsed = JSON.parse(value);
+        const result = z.array(sortingItemSchema).safeParse(parsed);
+
+        if (!result.success) return null;
+
+        if (validKeys && result.data.some((item) => !validKeys.has(item.id))) {
+          return null;
+        }
+        console.log('----->1', result.data);
+        return result.data as ExtendedColumnSort<TData>[];
+      } catch {
+        return null;
+      }
+    },
+    serialize: (value) => {
+      console.log('----->', value);
+      return JSON.stringify(value);
+    },
+  })
 };

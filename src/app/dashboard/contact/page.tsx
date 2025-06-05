@@ -22,7 +22,6 @@ export default async function Page(props: pageProps) {
 
   const searchParams = await props.searchParams;
   const search = searchParamsCache.parse(searchParams);
-  const key = serialize({ ...searchParams });
 
   const promises = Promise.all([
     getContacts({
@@ -64,7 +63,7 @@ export default async function Page(props: pageProps) {
                 />
               }
             >
-              <ContactsTable key={key} promises={promises} />
+              <ContactsTable promises={promises} />
             </Suspense>
           </ErrorBoundaryWrapper>
         </FeatureFlagsProvider>

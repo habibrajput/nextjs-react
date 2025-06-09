@@ -45,7 +45,8 @@ import {
   Group,
   Import,
   Download,
-  Info
+  Info,
+  Loader2
 } from 'lucide-react';
 
 export type Icon = React.ComponentType<IconProps>;
@@ -96,4 +97,5 @@ export const Icons = {
   import: Import,
   download: Download,
   info: Info,
+  loader2: Loader2,
 };

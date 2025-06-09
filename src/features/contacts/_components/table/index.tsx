@@ -6,7 +6,7 @@ import type { DataTableRowAction } from '@/types/data-table';
 import { DataTable } from '@/components/data-table/data-table';
 import { useDataTable } from '@/hooks/use-data-table';
 import { getContactsTableColumns } from '@/features/contacts/_components/contacts-table-columns';
-import { DataTableToolbar } from '@/components/ui/table/data-table-toolbar';
+import { DataTableToolbar } from '@/components/data-table/data-table-toolbar';
 import { DataTableSortList } from '@/components/data-table/data-table-sort-list';
 import { DataTableAdvancedToolbar } from '@/components/data-table/data-table-advanced-toolbar';
 import { DataTableFilterList } from '@/components/data-table/data-table-filter-list';
@@ -39,12 +39,13 @@ export function ContactsTable() {
   const { data: getContacts, isFetching } = useContacts(searchParamsClient);
   const { data: getGroups } = useGroups<GroupResponse>();
   const { enableAdvancedFilter, filterFlag } = useFeatureFlags();
-  
-  const contacts = getContacts?.data?.items ?? [];
-  const pageCount = getContacts?.data?.meta?.totalPages ?? 1
-  const groupOptions = getGroups?.data ?? []
 
-  const [rowAction, setRowAction] = React.useState<DataTableRowAction<Contact> | null>(null);
+  const contacts = getContacts?.data?.items ?? [];
+  const pageCount = getContacts?.data?.meta?.totalPages ?? 1;
+  const groupOptions = getGroups?.data ?? [];
+
+  const [rowAction, setRowAction] =
+    React.useState<DataTableRowAction<Contact> | null>(null);
   const columns = React.useMemo(
     () =>
       getContactsTableColumns({
@@ -73,9 +74,7 @@ export function ContactsTable() {
       <DataTable
         table={table}
         isLoading={isFetching}
-        actionBar={<ContactsTableActionBar table={table}
-        />
-        }
+        actionBar={<ContactsTableActionBar table={table} />}
       >
         {enableAdvancedFilter ? (
           <DataTableAdvancedToolbar table={table}>

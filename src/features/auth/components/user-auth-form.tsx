@@ -11,13 +11,12 @@ import {
 import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signIn } from 'next-auth/react';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import GithubSignInButton from './github-auth-button';
 import { toast } from 'sonner';
-import { useRouter } from 'next/navigation';
 
 const formSchema = z.object({
   email: z.string().email({ message: 'Enter a valid email address' }),
@@ -43,28 +42,27 @@ export default function UserAuthForm() {
   });
 
   const onSubmit = async (data: UserFormValue) => {
-    // startTransition(() => {
-    setIsSigningIn(true);
-    signIn('credentials', {
-      email: data.email,
-      password: data.password,
-      redirect:false
-    })
-      .then((data) => {
-        console.log('Sign In Data:', data);
-        if (data.error === 'CredentialsSignin') {
-          setSignInError(data.code);
-        }else{
-          router.push(callbackUrl ?? '/dashboard/overview');
-        }
+    startTransition(() => {
+      setIsSigningIn(true);
+      signIn('credentials', {
+        email: data.email,
+        password: data.password,
+        redirect: false
       })
-      .catch(() => {
-        toast.error('Sign In Failed!');
-      })
-      .finally(() => {
-        setIsSigningIn(false);
-      });
-    // });
+        .then((data) => {
+          if (data.error === 'CredentialsSignin') {
+            setSignInError(data.code);
+          } else {
+            router.push(callbackUrl ?? '/dashboard/overview');
+          }
+        })
+        .catch(() => {
+          toast.error('Sign In Failed!');
+        })
+        .finally(() => {
+          setIsSigningIn(false);
+        });
+    });
   };
 
   return (

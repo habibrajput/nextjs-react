@@ -10,7 +10,7 @@ const fetchContacts = async (queryParm: string) => {
 function useContacts(searchParams: string) {
   return useQuery({
     queryKey: ['contacts', searchParams],
-    queryFn: () => fetchContacts(searchParams),
+    queryFn: () => fetchContacts(searchParams)
     // staleTime: 0,
     // cacheTime: 0,
     // refetchOnWindowFocus: true,

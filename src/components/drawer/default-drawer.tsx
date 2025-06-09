@@ -8,13 +8,13 @@ import {
 import { Icons } from '@/components/icons';
 
 type DefaultDrawerProps = {
-    open: boolean; 
+    open: boolean;
     title: string;
     description?: string;
     width?: string | number;
     isBack?: boolean;
     children?: React.ReactNode
-    onBack?: () => void; 
+    onBack?: () => void;
     onClose: () => void;
 };
 
@@ -29,19 +29,19 @@ export default function DefaultDrawer({
     onClose,
 }: DefaultDrawerProps) {
     return (
-        <Drawer 
-            open={open} 
-            onOpenChange={onClose} 
+        <Drawer
+            open={open}
+            onOpenChange={onClose}
             direction='right'
         >
             <DrawerContent
-                className={`transition-all duration-700 ease-in-out`}
+                className={`transition-all duration-700 ease-in-out pointer-events-auto z-50`}
                 style={{
                     maxWidth: typeof width === 'number' ? `${width}px` : width,
                     width: '100%'
                 }}
-                onEscapeKeyDown={(e) => e.preventDefault()}
-                onPointerDown={(e) => e.preventDefault()}
+                // onEscapeKeyDown={(e) => e.preventDefault()}
+                // onPointerDown={(e) => e.preventDefault()}
                 onInteractOutside={(e) => e.preventDefault()}
             >
                 <DrawerHeader className='p-0'>
@@ -67,7 +67,7 @@ export default function DefaultDrawer({
                         <div className='grid'>
                             <h1 className='text-lg font-bold text-foreground'>{title} </h1>
                             {
-                            description ? 
+                            description ?
                                 <DrawerDescription className='text-xm font-medium'>{description}</DrawerDescription> :
                                 <DrawerDescription className='text-xm font-medium'></DrawerDescription>
                             }

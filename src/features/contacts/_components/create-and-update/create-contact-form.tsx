@@ -17,16 +17,36 @@ import { Input } from '@/components/ui/input';
 import { Loader2 } from 'lucide-react';
 
 const formSchema = z.object({
-  name: z.string().min(2, {
+  firstName: z.string().min(2, {
+    message: 'Product name must be at least 2 characters.'
+  }),
+  lastName: z.string().min(2, {
     message: 'Product name must be at least 2 characters.'
   }),
   email: z.string().min(2, {
     message: 'Product name must be at least 2 characters.'
   }),
-  phone: z.string().min(10, {
+  smsPhoneNumber: z.string().min(10, {
+    message: 'Description must be at least 10 characters.'
+  }),
+  whatsAppPhoneNumber: z.string().min(10, {
     message: 'Description must be at least 10 characters.'
   })
 });
+
+import { Cat, Dog, Fish, Rabbit, Turtle } from "lucide-react";
+import { MultiSelect } from '@/components/multi-select';
+import { PhoneInput } from '@/components/phone-input';
+import { Country } from 'react-phone-number-input';
+
+
+const frameworksList = [
+  { value: "react", label: "React", icon: Turtle },
+  { value: "angular", label: "Angular", icon: Cat },
+  { value: "vue", label: "Vue", icon: Dog },
+  { value: "svelte", label: "Svelte", icon: Rabbit },
+  { value: "ember", label: "Ember", icon: Fish },
+];
 
 type CreateContactFormProps = {
   onCancel: () => void;
@@ -38,13 +58,19 @@ export function CreateContactForm({
   onSuccess
 }: CreateContactFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [selectedFrameworks, setSelectedFrameworks] = useState<string[]>(["react", "angular"]);
 
+  const [country, setCountry] = useState<Country>();
+  const [phoneNumber, setPhoneNumber] = useState("");
+  
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: '',
+      firstName: '',
+      lastName: '',
       email: '',
-      phone: ''
+      smsPhoneNumber: '',
+      whatsAppPhoneNumber:''
     }
   });
 
@@ -63,12 +89,26 @@ export function CreateContactForm({
         <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
           <FormField
             control={form.control}
-            name='name'
+            name='firstName'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Name</FormLabel>
+                <FormLabel>First Name</FormLabel>
                 <FormControl>
-                  <Input placeholder='Enter contact name' {...field} />
+                  <Input placeholder='Enter contact first name' {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name='lastName'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Last Name</FormLabel>
+                <FormControl>
+                  <Input placeholder='Enter contact last name' {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -91,16 +131,46 @@ export function CreateContactForm({
 
           <FormField
             control={form.control}
-            name='phone'
+            name='smsPhoneNumber'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Phone No</FormLabel>
+                <FormLabel>SMS Phone No</FormLabel>
                 <FormControl>
                   <Input placeholder='Enter phone number' {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
+          />
+
+          <FormField
+            control={form.control}
+            name='whatsAppPhoneNumber'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>What's app Phone No</FormLabel>
+                <FormControl>
+                  <Input placeholder='Enter what"s app number' {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <PhoneInput
+            value={phoneNumber}
+            onChange={setPhoneNumber}
+            placeholder="Enter a phone number"
+          />
+
+          <MultiSelect
+            options={frameworksList}
+            onValueChange={setSelectedFrameworks}
+            defaultValue={selectedFrameworks}
+            placeholder="Select frameworks"
+            variant="inverted"
+            animation={2}
+            maxCount={3}
           />
 
           <div className='flex justify-end space-x-4 pt-4'>

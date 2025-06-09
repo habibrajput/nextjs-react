@@ -1,4 +1,4 @@
-import { OptionCardProps } from '@/features/products/utils/utils';
+import { OptionCardProps } from "../../_utils/utils";
 
 export function OptionCard({ icon, title, description, onClick }: OptionCardProps) {
   return (

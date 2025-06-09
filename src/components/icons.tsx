@@ -44,7 +44,8 @@ import {
   LocateFixed,
   Group,
   Import,
-  Download
+  Download,
+  Info
 } from 'lucide-react';
 
 export type Icon = React.ComponentType<IconProps>;
@@ -93,5 +94,6 @@ export const Icons = {
   locateFixed: LocateFixed,
   group: Group,
   import: Import,
-  download: Download
+  download: Download,
+  info: Info,
 };

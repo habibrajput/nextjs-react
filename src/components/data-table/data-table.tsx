@@ -12,10 +12,12 @@ import {
 import { getCommonPinningStyles } from "@/lib/data-table";
 import { cn } from "@/lib/utils";
 import { DataTablePagination } from "./data-table-pagination";
+import { Skeleton } from "../ui/skeleton";
 
 interface DataTableProps<TData> extends React.ComponentProps<"div"> {
     table: TanstackTable<TData>;
     actionBar?: React.ReactNode;
+    isLoading?: boolean;
 }
 
 export function DataTable<TData>({
@@ -23,6 +25,7 @@ export function DataTable<TData>({
     actionBar,
     children,
     className,
+    isLoading,
     ...props
 }: DataTableProps<TData>) {
     return (
@@ -56,36 +59,52 @@ export function DataTable<TData>({
                         ))}
                     </TableHeader>
                     <TableBody>
-                        {table.getRowModel().rows?.length ? (
-                            table.getRowModel().rows.map((row) => (
-                                <TableRow
-                                    key={row.id}
-                                    data-state={row.getIsSelected() && "selected"}
-                                >
-                                    {row.getVisibleCells().map((cell) => (
-                                        <TableCell
-                                            key={cell.id}
-                                            style={{
-                                                ...getCommonPinningStyles({ column: cell.column }),
-                                            }}
-                                        >
-                                            {flexRender(
-                                                cell.column.columnDef.cell,
-                                                cell.getContext(),
-                                            )}
-                                        </TableCell>
-                                    ))}
-                                </TableRow>
-                            ))
+                        {isLoading ? (
+                            <>
+                                {[...Array(10)].map((_, index) => (
+                                    <TableRow key={index}>
+                                        {[...Array(7)].map((_, index) => (
+                                            <TableCell>
+                                                <Skeleton className="h-6 w-full" />
+                                            </TableCell>
+                                         ))}
+                                    </TableRow>
+                                ))}
+                            </>
                         ) : (
-                            <TableRow>
-                                <TableCell
-                                    colSpan={table.getAllColumns().length}
-                                    className="h-24 text-center"
-                                >
-                                    No results.
-                                </TableCell>
-                            </TableRow>
+                            <>
+                                {table.getRowModel().rows?.length ? (
+                                    table.getRowModel().rows.map((row) => (
+                                        <TableRow
+                                            key={row.id}
+                                            data-state={row.getIsSelected() && "selected"}
+                                        >
+                                            {row.getVisibleCells().map((cell) => (
+                                                <TableCell
+                                                    key={cell.id}
+                                                    style={{
+                                                        ...getCommonPinningStyles({ column: cell.column }),
+                                                    }}
+                                                >
+                                                    {flexRender(
+                                                        cell.column.columnDef.cell,
+                                                        cell.getContext(),
+                                                    )}
+                                                </TableCell>
+                                            ))}
+                                        </TableRow>
+                                    ))
+                                ) : (
+                                    <TableRow>
+                                        <TableCell
+                                            colSpan={table.getAllColumns().length}
+                                            className="h-24 text-center"
+                                        >
+                                            No results.
+                                        </TableCell>
+                                    </TableRow>
+                                )}
+                            </>
                         )}
                     </TableBody>
                 </Table>

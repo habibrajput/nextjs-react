@@ -3,7 +3,8 @@
 import type { DataTableRowAction } from '@/types/data-table';
 import { Column, ColumnDef } from '@tanstack/react-table';
 import {
-  CalendarIcon, Ellipsis, Check, Copy
+  CalendarIcon, Ellipsis, Copy, MailSearch, PhoneCall, UserSearch,
+  Users, Crown, MapPin, Calendar
 } from 'lucide-react';
 import * as React from 'react';
 
@@ -23,20 +24,92 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { formatDate } from '@/lib/format';
-import { Contact } from '@/features/contacts/_types/contact';
+import { Badge } from '@/components/ui/badge';
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
+import { Card, CardContent } from '@/components/ui/card';
+import { GetContactsTableColumnsProps } from '../_types/types';
 
+function OverlappedCards({
+  groups: groupList,
+  maxVisible = 3,
+}: {
+  groups: any[],
+  maxVisible?: number
+}) {
+  const visibleGroups = groupList.slice(0, maxVisible)
+  const remainingCount = Math.max(0, groupList.length - maxVisible)
 
-interface GetContactsTableColumnsProps {
+  return (
+    <div className="flex items-center">
+      {visibleGroups.map((group, index) => (
+        <HoverCard key={group.id}>
+          <HoverCardTrigger asChild>
+            <div
+              className={`${index > 0 ? "-ml-6" : ""} relative cursor-pointer 
+                transition-all duration-300 hover:scale-105 hover:z-10`}
+              style={{ zIndex: visibleGroups.length - index }}
+            >
+              <Card className="w-20 h-12 shadow-lg border-2 border-white">
+                <CardContent
+                  className={`p-2 ${group.color} text-white rounded-md h-full flex items-center justify-center`}
+                >
+                  <span className="text-xs font-semibold">{group.avatar}</span>
+                </CardContent>
+              </Card>
+            </div>
+          </HoverCardTrigger>
+          <HoverCardContent className="w-80" side="top">
+            <div className="space-y-3">
+              <div className="flex items-center gap-3">
+                <div className={`w-12 h-12 ${group.color} rounded-lg flex items-center justify-center`}>
+                  <span className="text-white font-bold text-lg">{group.avatar}</span>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-lg">{group.name}</h4>
+                  <p className="text-sm text-muted-foreground">{group.description}</p>
+                </div>
+              </div>
 
-  groupOptions: { id: number; name: string }[];
-  setRowAction: React.Dispatch<
-    React.SetStateAction<DataTableRowAction<Contact> | null>
-  >;
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <div className="flex items-center gap-2">
+                  <Users className="w-4 h-4 text-muted-foreground" />
+                  <span>{group.members} members</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Crown className="w-4 h-4 text-muted-foreground" />
+                  <span>{group.lead}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Calendar className="w-4 h-4 text-muted-foreground" />
+                  <span>{new Date(group.created).toLocaleDateString()}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <MapPin className="w-4 h-4 text-muted-foreground" />
+                  <span>{group.location}</span>
+                </div>
+              </div>
+            </div>
+          </HoverCardContent>
+        </HoverCard>
+      ))}
+
+      {remainingCount > 0 && (
+        <div
+          className="-ml-6 w-20 h-12 bg-gray-100 border-2 border-white shadow-lg rounded-md
+            flex items-center justify-center cursor-pointer
+            transition-all duration-300 hover:scale-105 hover:bg-gray-200"
+        >
+          <span className="text-gray-600 font-medium text-xs">+{remainingCount}</span>
+        </div>
+      )}
+    </div>
+  )
 }
 
+
 export function getContactsTableColumns({
-  groupOptions,
-  setRowAction
+  setRowAction,
+  groupOptions
 }: GetContactsTableColumnsProps): ColumnDef<Contact>[] {
   return [
     {
@@ -62,10 +135,11 @@ export function getContactsTableColumns({
       ),
       enableSorting: false,
       enableHiding: false,
-      size: 40
+      size: 30
     },
     {
-      id: 'full_name',
+      id: 'fullName',
+      accessorKey: 'firstName',
       header: 'Full Name',
       accessorFn: (row) => `${row.firstName} ${row.lastName}`,
       cell: ({ row }) => {
@@ -76,10 +150,11 @@ export function getContactsTableColumns({
           </span>
         );
       },
+      enableColumnFilter: true,
       meta: {
         label: 'Full Name',
+        icon: UserSearch
       },
-      enableColumnFilter: true
     },
     {
       id: 'email',
@@ -96,12 +171,14 @@ export function getContactsTableColumns({
           </div>
         );
       },
+      enableColumnFilter: true,
+      enableSorting: false,
       meta: {
         label: 'Email',
         placeholder: 'Search email...',
-        variant: 'text'
+        variant: 'text',
+        icon: MailSearch
       },
-      enableColumnFilter: true
     },
     {
       id: 'groups',
@@ -116,19 +193,22 @@ export function getContactsTableColumns({
         return (
           <div className='flex flex-wrap gap-1'>
             {groups.map((group) => (
-              <div className='flex flex-nowrap' key={group.id}>
-                <span className='rounded-md bg-gray-200 px-2 py-1 text-xs text-gray-800'>
-                  {group.name}
-                </span>
-              </div>
+              <Badge key={group.id} variant="outline" className="bg-green-100 text-green-800 border-green-200 font-medium">
+                <Users className="w-3 h-3 mr-1" />
+                {group.name}
+              </Badge>
             ))}
+            {/* <OverlappedCards groups={groups}/> */}
           </div>
         );
       },
       enableColumnFilter: true,
+      enableSorting: false,
+      size: 150,
       meta: {
         label: 'Groups',
         variant: 'multiSelect',
+        icon: Users,
         options: groupOptions.map((group) => ({
           label: group.name,
           value: group.name
@@ -138,107 +218,59 @@ export function getContactsTableColumns({
     {
       accessorKey: 'smsPhoneNumber',
       header: 'SMS Phone',
+      cell: ({ cell }) => {
+        const phoneNumber = cell.getValue<string>();
+        return (
+          <div className='flex items-center gap-2'>
+            <span className='max-w-[31.25rem] truncate font-medium'>
+              {phoneNumber}
+            </span>
+            <Button
+              variant='ghost'
+              className='opacity-0 hover:opacity-100 focus:outline-2 focus:outline-offset-2 focus:outline-green-100 active:bg-green-100'
+              size='icon'
+              onClick={() => navigator.clipboard.writeText(phoneNumber)}
+            >
+              <Copy className='size-4 ' />
+            </Button>
+          </div>
+        );
+      },
+      enableColumnFilter: true,
       meta: {
         label: 'SMS Phone',
-      }
+        icon: PhoneCall
+      },
     },
     {
       accessorKey: 'whatsAppPhoneNumber',
+      cell: ({ cell }) => {
+        const whatsAppPhoneNumber = cell.getValue<string>();
+        return (
+          <div className='flex items-center gap-2'>
+            <span className='max-w-[31.25rem] truncate font-medium'>
+              {whatsAppPhoneNumber}
+            </span>
+            <Button
+              variant='ghost'
+              className='opacity-0 hover:opacity-100 focus:outline-2 focus:outline-offset-2 focus:outline-gray-150 active:bg-gray-200'
+              size='icon'
+              onClick={() =>
+                navigator.clipboard.writeText(whatsAppPhoneNumber)
+              }
+            >
+              <Copy className='size-4' />
+            </Button>
+          </div>
+        );
+      },
+      enableColumnFilter: true,
       header: "What's app Phone",
       meta: {
         label: 'Whats app Phone',
+        icon: PhoneCall
       }
     },
-    // {
-    //   id: 'groups',
-    //   accessorKey: 'groups',
-    //   header: ({ column }) => (
-    //     <DataTableColumnHeader column={column} title='Groups' />
-    //   ),
-    //   cell: ({ cell }) => {
-    //     const statusAll = ['todo', 'in-progress', 'done', 'canceled'];
-    //     const status = statusAll.find(
-    //       (status) => status === cell.getValue<Contact['status']>()
-    //     );
-    //
-    //     if (!status) return null;
-    //
-    //     // const Icon = getStatusIcon(status);
-    //
-    //     return (
-    //       <Badge variant='outline' className='py-1 [&>svg]:size-3.5'>
-    //         {/*<Icon />*/}
-    //         <span className='capitalize'>{status}</span>
-    //       </Badge>
-    //     );
-    //   },
-    //   meta: {
-    //     label: 'Status',
-    //     variant: 'multiSelect',
-    //     // options: tasks.status.enumValues.map((status) => ({
-    //     //   label: status.charAt(0).toUpperCase() + status.slice(1),
-    //     //   value: status,
-    //     //   count: statusCounts[status],
-    //     //   icon: getStatusIcon(status)
-    //     // })),
-    //     icon: CircleDashed
-    //   },
-    //   enableColumnFilter: true
-    // },
-    // {
-    //   id: 'priority',
-    //   accessorKey: 'priority',
-    //   header: ({ column }) => (
-    //     <DataTableColumnHeader column={column} title='Priority' />
-    //   ),
-    //   cell: ({ cell }) => {
-    //     const priority = tasks.priority.enumValues.find(
-    //       (priority) => priority === cell.getValue<Contact['priority']>()
-    //     );
-    //
-    //     if (!priority) return null;
-    //
-    //     const Icon = getPriorityIcon(priority);
-    //
-    //     return (
-    //       <Badge variant='outline' className='py-1 [&>svg]:size-3.5'>
-    //         <Icon />
-    //         <span className='capitalize'>{priority}</span>
-    //       </Badge>
-    //     );
-    //   },
-    //   meta: {
-    //     label: 'Priority',
-    //     variant: 'multiSelect',
-    //     options: tasks.priority.enumValues.map((priority) => ({
-    //       label: priority.charAt(0).toUpperCase() + priority.slice(1),
-    //       value: priority,
-    //       count: priorityCounts[priority],
-    //       icon: getPriorityIcon(priority)
-    //     })),
-    //     icon: ArrowUpDown
-    //   },
-    //   enableColumnFilter: true
-    // },
-    // {
-    //   id: 'estimatedHours',
-    //   accessorKey: 'estimatedHours',
-    //   header: ({ column }) => (
-    //     <DataTableColumnHeader column={column} title='Est. Hours' />
-    //   ),
-    //   cell: ({ cell }) => {
-    //     const estimatedHours = cell.getValue<number>();
-    //     return <div className='w-20 text-right'>{estimatedHours}</div>;
-    //   },
-    //   meta: {
-    //     label: 'Est. Hours',
-    //     variant: 'range',
-    //     range: [estimatedHoursRange.min, estimatedHoursRange.max],
-    //     unit: 'hr',
-    //     icon: Clock
-    //   },
-    //   enableColumnFilter: true
-    // },
     {
       id: 'createdAt',
       accessorKey: 'createdAt',

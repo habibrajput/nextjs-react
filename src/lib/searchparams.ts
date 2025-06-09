@@ -5,7 +5,7 @@ import {
   parseAsString,
   parseAsStringEnum
 } from 'nuqs/server';
-import { getFiltersStateParser, getSortStateParser } from './parsers';
+import { getFiltersStateParser } from './parsers';
 
 export const searchParams = {
   page: parseAsInteger.withDefault(1),

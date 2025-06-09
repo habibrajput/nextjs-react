@@ -1,23 +1,21 @@
 'use client';
 
-import { useSession } from 'next-auth/react';
 import { useQuery } from '@tanstack/react-query';
-import { apiServices } from '@/services/apiServices';
+import { commonApiServices } from '@/services/commonApiServices';
 
-const fetchContacts = async (
-  authToken: string
-) => {
-  return await apiServices.get('/contacts', authToken);
+const fetchContacts = async (queryParm: string) => {
+  return await commonApiServices.get(`/contacts?${queryParm}`);
 };
 
-const useContacts = () => {
-  const { data: session } = useSession();
-
+function useContacts(searchParams: string) {
   return useQuery({
-    queryKey: ['posts'],
-    queryFn: () => fetchContacts(session?.user?.token ?? ''),
-    enabled: false,
+    queryKey: ['contacts', searchParams],
+    queryFn: () => fetchContacts(searchParams),
+    // staleTime: 0,
+    // cacheTime: 0,
+    // refetchOnWindowFocus: true,
+    // refetchOnMount: true,
   });
-};
+}
 
 export { useContacts, fetchContacts };

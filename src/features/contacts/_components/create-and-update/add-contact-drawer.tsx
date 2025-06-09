@@ -9,7 +9,7 @@ import MultiStepForm from '@/features/contacts/_components/create-and-update/mul
 import { isMode, Mode, modeMap } from '@/features/contacts/_utils/utils';
 import { OptionCard } from './option-card';
 
-export default function AddContactWrapper() {
+export default function AddContactSheet() {
   const [isOpen, setIsOpen] = useState(false);
   const [width, setWidth] = useState(600);
   const [mode, setMode] = useState<Mode>('select');
@@ -25,11 +25,15 @@ export default function AddContactWrapper() {
     setTimeout(resetMode, 300);
   };
 
+  const contactCreationTypes = [
+    { value: "single", description: "Fill in the details to create a new contact.", icon: Icons.fileUp },
+    { value: "upload_file", description: "Upload a CSV or Excel file with your contact data.", icon: Icons.fileUp }  ]
+
   useEffect(() => {
     if (mode === 'upload') {
       setWidth(800)
     } else {
-      setWidth(600)
+      setWidth(500)
     }
   }, [mode]);
 
@@ -56,18 +60,15 @@ export default function AddContactWrapper() {
           {isSelect && (
             <div className='space-y-6'>
               <div className='grid grid-cols-1 gap-4'>
-                <OptionCard
-                  icon={<Icons.plus className='h-5 w-5' />}
-                  title={modeMap['create'].title}
-                  description={modeMap['create'].description}
-                  onClick={() => setMode('create')}
-                />
-                <OptionCard
-                  icon={<Icons.fileUp className='h-5 w-5' />}
-                  title={modeMap['upload'].title}
-                  description={modeMap['upload'].description}
-                  onClick={() => setMode('upload')}
-                />
+                {contactCreationTypes.map(type => (
+                  <OptionCard
+                    key={type.value}
+                    icon={<type.icon className='h-5 w-5' />}
+                    title={type.value === "single" ? modeMap['create'].title : modeMap['upload'].title}
+                    description={type.description}
+                    onClick={() => setMode(type.value === "single" ? 'create' : 'upload')}
+                  />
+                ))}
               </div>
             </div>
           )}

@@ -5,7 +5,7 @@ import { Card, CardAction, CardDescription, CardHeader, CardTitle } from '@/comp
 
 export type InfoCard = {
   title: string;
-  description: string;
+  description?: string;
   icon: React.ComponentType;
   value: string | number;
 };
@@ -35,11 +35,10 @@ export function InfoCard({ title, description, icon: Icon, value }: InfoCard) {
     <Card className="@container/card py-3">
       <CardHeader>
         <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-xl">{title}</CardTitle>
-        <CardDescription>{description}</CardDescription>
+        <CardDescription>{value}</CardDescription>
         <CardAction>
           <Badge variant="outline">
             <Icon />
-            {value}
           </Badge>
         </CardAction>
       </CardHeader>

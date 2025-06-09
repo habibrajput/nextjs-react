@@ -1,6 +1,7 @@
 import React, { Suspense } from 'react';
 import { Icons } from '@/components/icons';
-import { OverviewCards,OverviewCardsLoading } from '@/components/overview-cards';
+import { OverviewCards } from '@/components/overview-cards';
+import { OverviewCardsSkeleton } from '@/components/skeleton/overview-card-skeleton';
 
 const fetchContactOverData = (): Promise<any> => {
   return new Promise((resolve) => {
@@ -18,18 +19,18 @@ const fetchContactOverData = (): Promise<any> => {
           icon: Icons.info,
           value: '1,234'
         },
-        {
-          title: 'Grouped Contacts',
-          description: 'Currently active accounts',
-          icon: Icons.info,
-          value: '45,678'
-        },
-        {
-          title: 'Un Grouped Contacts',
-          description: 'Monthly growth rate',
-          icon: Icons.info,
-          value: '4.5%'
-        }
+        // {
+        //   title: 'Grouped Contacts',
+        //   description: 'Currently active accounts',
+        //   icon: Icons.info,
+        //   value: '45,678'
+        // },
+        // {
+        //   title: 'Un Grouped Contacts',
+        //   description: 'Monthly growth rate',
+        //   icon: Icons.info,
+        //   value: '4.5%'
+        // }
       ]);
     }, 1000);
   });
@@ -42,7 +43,7 @@ const OverviewCardsDetails = async () => {
 
 export const ContactOverviewCards = () => {
   return (
-    <Suspense fallback={<OverviewCardsLoading />}>
+    <Suspense fallback={<OverviewCardsSkeleton />}>
       <OverviewCardsDetails />
     </Suspense>
   );

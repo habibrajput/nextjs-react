@@ -5,6 +5,7 @@ import { ContactOverviewCards } from '@/features/contacts/_components/contact-ov
 import PageContainer from '@/components/layout/page-container';
 import AddContactSheet from '@/features/contacts/_components/create-and-update/add-contact-drawer';
 import ContactTableErrorBoundary from '@/features/contacts/_components/error-boundary/table-error-boundary';
+import React from 'react';
 
 export const metadata = {
   title: 'Dashboard: Contacts'
@@ -15,9 +16,7 @@ export default async function Page() {
     <PageContainer scrollable={true}>
       <div className='flex flex-1 flex-col space-y-4'>
         <div className='flex items-start justify-between'>
-          <Heading
-            title='Contacts'
-          />
+          <Heading title='Contacts' />
           <AddContactSheet />
         </div>
 
@@ -43,7 +42,7 @@ export default async function Page() {
                 />
               }
             >  */}
-            <ContactsTable/>
+            <ContactsTable />
             {/* </Suspense> */}
           </FeatureFlagsProvider>
         </ContactTableErrorBoundary>

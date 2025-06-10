@@ -1,9 +1,9 @@
 import { auth } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import router from 'next/router';
+import { HttpError } from '@/lib/http-error';
 
 export class CommonApiServices {
-
   private async isServerComponent() {
     if (typeof window === 'undefined') {
       return true;
@@ -25,13 +25,18 @@ export class CommonApiServices {
 
   private async handleResponse(response: Response) {
     const responseData = await response.json();
+    const { error, statusCode, message } = responseData._metaData;
 
-    if (responseData._metaData.statusCode === 401) {
+    if (statusCode === 401) {
       if (await this.isServerComponent()) {
         redirect('/signin');
       }
 
       router.push('/signin');
+    }
+
+    if (statusCode === 409) {
+      throw new HttpError(error, statusCode, message);
     }
 
     return responseData;
@@ -51,7 +56,7 @@ export class CommonApiServices {
 
     return this.handleResponse(response);
   }
-  
+
   async post<T = any>(path: string, body: any): Promise<T> {
     const token = await this.getToken();
     const response = await fetch(
@@ -60,9 +65,9 @@ export class CommonApiServices {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token}`
         },
-        body: JSON.stringify(body),
+        body: JSON.stringify(body)
       }
     );
 

@@ -5,6 +5,14 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { Button } from '@/components/ui/button';
+import { Icons } from '@/components/icons';
+import { CreateContactFormSchema } from '@/features/contacts/_lib/definitions';
+import { Option } from '@/components/multiple-selector';
+import { InputSkeleton } from '@/components/skeleton/input-skeleton';
+import { useGroups } from '../../_hooks/use-groups';
+import { CreateContactFormProps } from '../../_types/types';
+import { useCreateContact } from '../../_hooks/use-create-contact';
+import { clearFormErrors, getFormError } from '@/utils/form-errors.utils';
 import {
   Form,
   FormControl,
@@ -13,25 +21,16 @@ import {
   FormLabel,
   FormMessage
 } from '@/components/ui/form';
-import { Icons } from '@/components/icons';
-import { CreateContactFormSchema } from '@/features/contacts/_lib/definitions';
-import { Option } from '@/components/multiple-selector';
 import {
   LazyInput,
   LazyMultipleSelector,
   LazyPhoneInput
 } from '@/components/lazy/lazy-components';
-import { InputSkeleton } from '@/components/skeleton/input-skeleton';
-import { useGroups } from '../../_hooks/use-groups';
-import { CreateContactFormProps } from '../../_types/types';
-import { useCreateContact } from '../../_hooks/use-create-contact';
 
 export function CreateContactForm({
   onCancel,
   onSuccess
 }: CreateContactFormProps) {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
   const form = useForm<z.infer<typeof CreateContactFormSchema>>({
     resolver: zodResolver(CreateContactFormSchema),
     defaultValues: {
@@ -44,38 +43,21 @@ export function CreateContactForm({
     }
   });
 
-  const {data:groupOptions} = useGroups();
+  const { data: groupOptions } = useGroups();
   const createContactMutation = useCreateContact();
 
-  const extentGroupOptions:Option[] = groupOptions.data.map((group:Option)=>{
-    return { label: group.name, value: group.name }
-  })
+  const extentGroupOptions: Option[] = groupOptions.data.map(
+    (group: Option) => {
+      return { label: group.name, value: group.name };
+    }
+  );
 
   const [isTriggered, setIsTriggered] = useState(false);
   const [groups, setGroups] = useState<Option[]>([]);
 
   function onSubmit(values: z.infer<typeof CreateContactFormSchema>) {
-    setIsSubmitting(true);
     createContactMutation.mutate(values);
-
-    if (createContactMutation.isError) {
-      const error = createContactMutation.error as {
-        _metaData: {
-          statusCode: number;
-          message: {
-            property: string;
-            message: string;
-          };
-        };
-        error: string;
-      };
-
-      console.log('API Error:', error._metaData.message.message);
-    }
-    setTimeout(() => {
-      setIsSubmitting(false);
-      // onSuccess();
-    }, 1500);
+    // onSuccess();
   }
 
   return (
@@ -112,6 +94,9 @@ export function CreateContactForm({
                 <FormControl>
                   <Suspense fallback={<InputSkeleton />}>
                     <LazyInput
+                      onInput={() => {
+                        clearFormErrors();
+                      }}
                       placeholder='Enter contact last name'
                       {...field}
                     />
@@ -131,6 +116,11 @@ export function CreateContactForm({
                 <FormControl>
                   <Suspense fallback={<InputSkeleton />}>
                     <LazyInput placeholder='Enter email' {...field} />
+                    {getFormError('email') && (
+                      <p className='text-sm text-red-500'>
+                        {getFormError('email')}
+                      </p>
+                    )}
                   </Suspense>
                 </FormControl>
                 <FormMessage />
@@ -154,6 +144,11 @@ export function CreateContactForm({
                       defaultCountry='PK'
                       {...field}
                     />
+                    {getFormError('smsPhoneNumber') && (
+                      <p className='text-sm text-red-500'>
+                        {getFormError('smsPhoneNumber')}
+                      </p>
+                    )}
                   </Suspense>
                 </FormControl>
                 <FormMessage />
@@ -179,6 +174,11 @@ export function CreateContactForm({
                       defaultCountry='PK'
                       {...field}
                     />
+                    {getFormError('whatsAppPhoneNumber') && (
+                      <p className='text-sm text-red-500'>
+                        {getFormError('whatsAppPhoneNumber')}
+                      </p>
+                    )}
                   </Suspense>
                 </FormControl>
                 <FormMessage />
@@ -204,7 +204,9 @@ export function CreateContactForm({
                       }}
                       triggerSearchOnFocus
                       loadingIndicator={
-                        <p className="py-2 text-center text-lg leading-10 text-muted-foreground">loading...</p>
+                        <p className='text-muted-foreground py-2 text-center text-lg leading-10'>
+                          loading...
+                        </p>
                       }
                       placeholder='Select groups you like...'
                       creatable
@@ -225,11 +227,11 @@ export function CreateContactForm({
             <Button type='button' variant='outline' onClick={onCancel}>
               Cancel
             </Button>
-            <Button type='submit' disabled={isSubmitting}>
-              {isSubmitting && (
+            <Button type='submit' disabled={createContactMutation.isLoading}>
+              {createContactMutation.isLoading && (
                 <Icons.loader2 className='mr-2 h-4 w-4 animate-spin' />
               )}
-              {isSubmitting ? 'Save...' : 'Save'}
+              {createContactMutation.isLoading ? 'Save...' : 'Save'}
             </Button>
           </div>
         </form>

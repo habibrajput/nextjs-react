@@ -48,7 +48,24 @@ export class CommonApiServices {
         }
       }
     );
-    // const responseData = await response.json();
+
+    return this.handleResponse(response);
+  }
+  
+  async post<T = any>(path: string, body: any): Promise<T> {
+    const token = await this.getToken();
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}${path}`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(body),
+      }
+    );
+
     return this.handleResponse(response);
   }
 }

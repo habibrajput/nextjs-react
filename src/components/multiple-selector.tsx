@@ -502,7 +502,7 @@ const MultipleSelector = React.forwardRef<
                     }}
                     onClick={() => handleUnselect(option)}
                   >
-                    <X className='text-muted-foreground hover:text-foreground h-3 w-3' />
+                    <X className='cursor-pointer bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-4 w-4' />
                   </button>
                 </Badge>
               );
@@ -549,7 +549,7 @@ const MultipleSelector = React.forwardRef<
                 onChange?.(selected.filter((s) => s.fixed));
               }}
               className={cn(
-                'absolute h-6 w-6 p-0 ltr:right-0 rtl:left-0',
+                'absolute h-6 w-6 ml-1 ltr:right-0 rtl:left-0',
                 (hideClearAllButton ||
                   disabled ||
                   selected.length < 1 ||

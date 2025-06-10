@@ -22,18 +22,9 @@ import {
   LazyPhoneInput
 } from '@/components/lazy/lazy-components';
 import { InputSkeleton } from '@/components/skeleton/input-skeleton';
-
-const OPTIONS: Option[] = [
-  { label: 'Group 1', value: 'group_1' },
-  { label: 'Group 2', value: 'group_2' },
-  { label: 'Group 3', value: 'group_3' },
-  { label: 'Group 4', value: 'group_4', disable: true }
-];
-
-type CreateContactFormProps = {
-  onCancel: () => void;
-  onSuccess: () => void;
-};
+import { useGroups } from '../../_hooks/use-groups';
+import { CreateContactFormProps } from '../../_types/types';
+import { useCreateContact } from '../../_hooks/use-create-contact';
 
 export function CreateContactForm({
   onCancel,
@@ -44,21 +35,46 @@ export function CreateContactForm({
   const form = useForm<z.infer<typeof CreateContactFormSchema>>({
     resolver: zodResolver(CreateContactFormSchema),
     defaultValues: {
-      firstName: '',
-      lastName: '',
-      email: '',
-      smsPhoneNumber: '',
-      whatsAppPhoneNumber: '',
+      firstName: 'habib',
+      lastName: 'ur rehman',
+      email: 'habib@gmail.com',
+      smsPhoneNumber: '+925349433345',
+      whatsAppPhoneNumber: '+925349433345',
       groups: []
     }
   });
 
+  const {data:groupOptions} = useGroups();
+  const createContactMutation = useCreateContact();
+
+  const extentGroupOptions:Option[] = groupOptions.data.map((group:Option)=>{
+    return { label: group.name, value: group.name }
+  })
+
+  const [isTriggered, setIsTriggered] = useState(false);
+  const [groups, setGroups] = useState<Option[]>([]);
+
   function onSubmit(values: z.infer<typeof CreateContactFormSchema>) {
     setIsSubmitting(true);
+    createContactMutation.mutate(values);
 
+    if (createContactMutation.isError) {
+      const error = createContactMutation.error as {
+        _metaData: {
+          statusCode: number;
+          message: {
+            property: string;
+            message: string;
+          };
+        };
+        error: string;
+      };
+
+      console.log('API Error:', error._metaData.message.message);
+    }
     setTimeout(() => {
       setIsSubmitting(false);
-      onSuccess();
+      // onSuccess();
     }, 1500);
   }
 
@@ -180,8 +196,18 @@ export function CreateContactForm({
                   <Suspense fallback={<InputSkeleton />}>
                     <LazyMultipleSelector
                       {...field}
-                      defaultOptions={OPTIONS}
+                      onSearch={async (value) => {
+                        setIsTriggered(true);
+                        const res = extentGroupOptions;
+                        setIsTriggered(false);
+                        return res;
+                      }}
+                      triggerSearchOnFocus
+                      loadingIndicator={
+                        <p className="py-2 text-center text-lg leading-10 text-muted-foreground">loading...</p>
+                      }
                       placeholder='Select groups you like...'
+                      creatable
                       emptyIndicator={
                         <p className='text-center text-lg leading-10 text-gray-600 dark:text-gray-400'>
                           no results found.

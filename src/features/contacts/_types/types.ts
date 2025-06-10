@@ -37,3 +37,8 @@ export type Group = {
 export type PageProps = {
     searchParams: Promise<SearchParams>;
 };
+
+export type CreateContactFormProps = {
+    onCancel: () => void;
+    onSuccess: () => void;
+  };

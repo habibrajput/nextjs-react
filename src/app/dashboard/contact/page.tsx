@@ -5,7 +5,8 @@ import { ContactOverviewCards } from '@/features/contacts/_components/contact-ov
 import PageContainer from '@/components/layout/page-container';
 import AddContactSheet from '@/features/contacts/_components/create-and-update/add-contact-drawer';
 import ContactTableErrorBoundary from '@/features/contacts/_components/error-boundary/table-error-boundary';
-import React from 'react';
+import React, { Suspense } from 'react';
+import { DataTableSkeleton } from '@/components/data-table/data-table-skeleton';
 
 export const metadata = {
   title: 'Dashboard: Contacts'
@@ -20,11 +21,11 @@ export default async function Page() {
           <AddContactSheet />
         </div>
 
-        <ContactOverviewCards />
+        {/* <ContactOverviewCards /> */}
 
         <ContactTableErrorBoundary>
           <FeatureFlagsProvider>
-            {/* <Suspense
+            <Suspense
               fallback={
                 <DataTableSkeleton
                   columnCount={10}
@@ -41,9 +42,9 @@ export default async function Page() {
                   shrinkZero
                 />
               }
-            >  */}
+            > 
             <ContactsTable />
-            {/* </Suspense> */}
+            </Suspense>
           </FeatureFlagsProvider>
         </ContactTableErrorBoundary>
       </div>

@@ -14,9 +14,10 @@ import { DataTableFilterMenu } from '@/components/data-table/data-table-filter-m
 import type { Contact } from '@/features/contacts/_types/types';
 import { useFeatureFlags } from '../feature-flags-provider';
 import { ContactsTableActionBar } from '../contact-table-action-bar';
-import { useContacts } from '../../_hooks/use-contacts';
 import { useSearchParams } from 'next/navigation';
 import { useGroups } from '../../_hooks/use-groups';
+import { useContacts } from '@/features/contacts/_hooks/use-contacts';
+import { useIsFetching } from '@tanstack/react-query';
 
 interface Group {
   id: number;
@@ -36,7 +37,7 @@ interface GroupResponse {
 
 export function ContactsTable() {
   const searchParamsClient = useSearchParams().toString();
-  const { data: getContacts, isFetching } = useContacts(searchParamsClient);
+  const { data: getContacts, isFetching, isInitialLoading } = useContacts(searchParamsClient);
   const { data: getGroups } = useGroups<GroupResponse>();
   const { enableAdvancedFilter, filterFlag } = useFeatureFlags();
 
@@ -73,7 +74,7 @@ export function ContactsTable() {
     <>
       <DataTable
         table={table}
-        isLoading={isFetching}
+        isLoading={isFetching && !isInitialLoading}
         actionBar={<ContactsTableActionBar table={table} />}
       >
         {enableAdvancedFilter ? (

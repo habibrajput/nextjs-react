@@ -3,7 +3,7 @@ export interface ApiErrorDetail {
   message: string;
 }
 
-export class HttpError extends Error {
+export class CatchHttpError extends Error {
   status: number;
   data: ApiErrorDetail | null;
 

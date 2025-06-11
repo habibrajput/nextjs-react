@@ -1,19 +1,15 @@
 import { auth } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import router from 'next/router';
-import { HttpError } from '@/lib/http-error';
+import { CatchHttpError } from '@/lib/catch-http-error';
 
 export class CommonApiServices {
   private async isServerComponent() {
-    if (typeof window === 'undefined') {
-      return true;
-    }
-
-    return false;
+    return typeof window === 'undefined';
   }
 
   private async getToken() {
-    if (typeof window === 'undefined') {
+    if (await this.isServerComponent()) {
       const session = await auth();
       return session.user?.token ?? '';
     } else {
@@ -32,11 +28,11 @@ export class CommonApiServices {
         redirect('/signin');
       }
 
-      router.push('/signin');
+      await router.push('/signin');
     }
 
     if (statusCode === 409) {
-      throw new HttpError(error, statusCode, message);
+      throw new CatchHttpError(error, statusCode, message);
     }
 
     return responseData;

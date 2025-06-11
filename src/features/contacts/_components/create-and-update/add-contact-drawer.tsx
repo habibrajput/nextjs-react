@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Icons } from '@/components/icons';
 import DefaultDrawer from '@/components/drawer/default-drawer';
@@ -8,6 +8,8 @@ import { CreateContactForm } from '@/features/contacts/_components/create-and-up
 import MultiStepForm from '@/features/contacts/_components/create-and-update/multistep-form';
 import { isMode, Mode, modeMap } from '@/features/contacts/_utils/utils';
 import { OptionCard } from './option-card';
+import { FormProvider } from '@/features/contacts/_components/create-and-update/FormErrorsContext';
+import { PopoverForm } from './test-form';
 
 export default function AddContactSheet() {
   const [isOpen, setIsOpen] = useState(false);
@@ -26,14 +28,23 @@ export default function AddContactSheet() {
   };
 
   const contactCreationTypes = [
-    { value: "single", description: "Fill in the details to create a new contact.", icon: Icons.fileUp },
-    { value: "upload_file", description: "Upload a CSV or Excel file with your contact data.", icon: Icons.fileUp }  ]
+    {
+      value: 'single',
+      description: 'Fill in the details to create a new contact.',
+      icon: Icons.fileUp
+    },
+    {
+      value: 'upload_file',
+      description: 'Upload a CSV or Excel file with your contact data.',
+      icon: Icons.fileUp
+    }
+  ];
 
   useEffect(() => {
     if (mode === 'upload') {
-      setWidth(800)
+      setWidth(800);
     } else {
-      setWidth(500)
+      setWidth(500);
     }
   }, [mode]);
 
@@ -60,13 +71,19 @@ export default function AddContactSheet() {
           {isSelect && (
             <div className='space-y-6'>
               <div className='grid grid-cols-1 gap-4'>
-                {contactCreationTypes.map(type => (
+                {contactCreationTypes.map((type) => (
                   <OptionCard
                     key={type.value}
                     icon={<type.icon className='h-5 w-5' />}
-                    title={type.value === "single" ? modeMap['create'].title : modeMap['upload'].title}
+                    title={
+                      type.value === 'single'
+                        ? modeMap['create'].title
+                        : modeMap['upload'].title
+                    }
                     description={type.description}
-                    onClick={() => setMode(type.value === "single" ? 'create' : 'upload')}
+                    onClick={() =>
+                      setMode(type.value === 'single' ? 'create' : 'upload')
+                    }
                   />
                 ))}
               </div>
@@ -80,6 +97,9 @@ export default function AddContactSheet() {
           {isUpload && (
             <MultiStepForm onCancel={resetMode} onSuccess={closeDrawer} />
           )}
+          <FormProvider>
+            <PopoverForm />
+          </FormProvider>
         </div>
       </DefaultDrawer>
     </>

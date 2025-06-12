@@ -65,7 +65,7 @@ export class CommonApiServices {
         },
         body: JSON.stringify(body)
       }
-    );
+    )
 
     return this.handleResponse(response);
   }

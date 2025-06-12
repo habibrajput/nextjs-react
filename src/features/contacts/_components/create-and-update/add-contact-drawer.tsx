@@ -8,8 +8,6 @@ import { CreateContactForm } from '@/features/contacts/_components/create-and-up
 import MultiStepForm from '@/features/contacts/_components/create-and-update/multistep-form';
 import { isMode, Mode, modeMap } from '@/features/contacts/_utils/utils';
 import { OptionCard } from './option-card';
-import { FormProvider } from '@/features/contacts/_components/create-and-update/FormErrorsContext';
-import { PopoverForm } from './test-form';
 
 export default function AddContactSheet() {
   const [isOpen, setIsOpen] = useState(false);
@@ -97,9 +95,6 @@ export default function AddContactSheet() {
           {isUpload && (
             <MultiStepForm onCancel={resetMode} onSuccess={closeDrawer} />
           )}
-          <FormProvider>
-            <PopoverForm />
-          </FormProvider>
         </div>
       </DefaultDrawer>
     </>

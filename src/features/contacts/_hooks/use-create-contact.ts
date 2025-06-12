@@ -13,10 +13,6 @@ const useCreateContact = () => {
     onSuccess: (result, variables, context) => {
       queryClient.invalidateQueries({ queryKey: ['contacts'] });
     },
-    onError: (error) => {
-      if (error instanceof CatchHttpError) {
-      }
-    }
   });
 };
 

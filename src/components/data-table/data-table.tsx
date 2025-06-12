@@ -63,8 +63,8 @@ export function DataTable<TData>({
                             <>
                                 {[...Array(10)].map((_, index) => (
                                     <TableRow key={index}>
-                                        {[...Array(7)].map((_, index) => (
-                                            <TableCell>
+                                        {[...Array(7)].map((_, indexTwo) => (
+                                            <TableCell key={indexTwo}>
                                                 <Skeleton className="h-6 w-full" />
                                             </TableCell>
                                          ))}

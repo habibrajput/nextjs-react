@@ -25,6 +25,8 @@ import {
   LazyMultipleSelector,
   LazyPhoneInput
 } from '@/components/lazy/lazy-components';
+import { CatchHttpError } from '@/lib/catch-http-error';
+import { log } from 'console';
 
 export function CreateContactForm({
   onCancel,
@@ -42,6 +44,11 @@ export function CreateContactForm({
     }
   });
 
+  const {
+  setError,
+  reset,
+} = form;
+
   const { data: groupOptions } = useGroups();
   const createContactMutation = useCreateContact();
 
@@ -55,7 +62,20 @@ export function CreateContactForm({
   const [groups, setGroups] = useState<Option[]>([]);
 
   function onSubmit(values: z.infer<typeof CreateContactFormSchema>) {
-    createContactMutation.mutate(values);
+    createContactMutation.mutate(values,
+      {
+        onError: (errors: unknown) => {
+          if (errors instanceof CatchHttpError) {
+            errors.data.map(error=>{
+              setError(error.property, {
+                type: 'server',
+                message: error.message,
+              });
+            })
+          }
+        },
+      }
+    );
     // onSuccess();
   }
 
